@@ -10,8 +10,8 @@ jobs:
       - name: Docker login
         run: "docker login docker.pkg.github.com -u $DOCKER_USERNAME -p $DOCKER_PASSWORD"
         env:
-          DOCKER_PASSWORD: "$GITHUB_ACTOR"
-          DOCKER_USERNAME: ${{ secrets.GITHUB_TOKEN }}
+          DOCKER_USERNAME: "$GITHUB_ACTOR"
+          DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
       - name: Docker build
         run: "docker build -t docker.pkg.github.com/preetam/readfasterapp/app:$GITHUB_SHA -t docker.pkg.github.com/preetam/readfasterapp/app:latest ."
       - name: Push image to GitHub Packages
