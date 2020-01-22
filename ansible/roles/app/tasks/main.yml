@@ -1,0 +1,26 @@
+---
+- name: create app sv directory
+  file: path=/home/ubuntu/sv/app state=directory
+
+- name: create app sv log directory
+  file: path=/home/ubuntu/sv/app/log/main state=directory
+
+- name: create app sv run file
+  template:
+    src=../templates/app_run.j2
+    dest=/home/ubuntu/sv/app/run
+    mode="0700"
+
+- name: create app sv log run file
+  template:
+    src=../templates/log_run.j2
+    dest=/home/ubuntu/sv/app/log/run
+    mode="0700"
+
+- name: create service symlink
+  file: src=/home/ubuntu/sv/app dest=/home/ubuntu/service/app state=link
+
+- name: copy Caddyfile
+  template: src=../templates/Caddyfile.j2 dest=/home/ubuntu/sv/proxy/vhosts/dev.readfaster.app
+  notify:
+    - restart caddy

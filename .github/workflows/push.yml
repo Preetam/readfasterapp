@@ -3,6 +3,21 @@ name: Push
 on: push
 
 jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Docker login
+        run: "docker login docker.pkg.github.com -u $DOCKER_USERNAME -p $DOCKER_PASSWORD"
+        env:
+          DOCKER_PASSWORD: "$GITHUB_ACTOR"
+          DOCKER_USERNAME: ${{ secrets.GITHUB_TOKEN }}
+      - name: Docker build
+        run: "docker build -t docker.pkg.github.com/Preetam/readfasterapp:$GITHUB_SHA -t docker.pkg.github.com/Preetam/readfasterapp:latest ."
+      - name: Push image to GitHub Packages
+        run: "docker push docker.pkg.github.com/Preetam/readfasterapp:$GITHUB_SHA"
+      - name: Push image to GitHub Packages
+        run: "docker push docker.pkg.github.com/Preetam/readfasterapp:latest"
   deploy:
     runs-on: ubuntu-latest
     steps:

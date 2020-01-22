@@ -1,2 +1,4 @@
 ---
 - hosts: digitalocean
+  roles:
+    - app
