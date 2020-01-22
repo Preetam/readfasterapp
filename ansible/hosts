@@ -1,0 +1,2 @@
+[digitalocean]
+dev.readfaster.app ansible_user=ubuntu
