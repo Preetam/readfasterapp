@@ -20,6 +20,7 @@ jobs:
         run: "docker push docker.pkg.github.com/Preetam/readfasterapp:latest"
   deploy:
     runs-on: ubuntu-latest
+    needs: build
     steps:
     - uses: actions/checkout@v1
     - uses: ./.github/actions/ansible
