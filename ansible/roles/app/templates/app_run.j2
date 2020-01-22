@@ -1,6 +1,6 @@
 #!/bin/sh
 docker kill app
 docker rm app
-docker pull docker.pkg.github.com/preetam/readfasterapp:{{build_sha}}
-docker run --name app --rm -w /serve --publish=8000:8000 --entrypoint /serve/main docker.pkg.github.com/preetam/readfasterapp:{{build_sha}} \
+docker pull docker.pkg.github.com/preetam/readfasterapp/app:{{build_sha}}
+docker run --name app --rm -w /serve --publish=8000:8000 --entrypoint /serve/main docker.pkg.github.com/preetam/readfasterapp/app:{{build_sha}} \
   2>&1
