@@ -10,6 +10,8 @@
     src=../templates/app_run.j2
     dest=/home/ubuntu/sv/app/run
     mode="0700"
+  notify:
+    - restart app
 
 - name: create app sv log run file
   template:
