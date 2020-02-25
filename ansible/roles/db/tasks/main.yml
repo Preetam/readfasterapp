@@ -1,0 +1,26 @@
+---
+- name: create db data directory
+  file: path=/home/ubuntu/data state=directory
+
+- name: create db sv directory
+  file: path=/home/ubuntu/sv/db state=directory
+
+- name: create db sv log directory
+  file: path=/home/ubuntu/sv/db/log/main state=directory
+
+- name: create db sv run file
+  template:
+    src=../templates/db_run.j2
+    dest=/home/ubuntu/sv/db/run
+    mode="0700"
+  notify:
+    - restart db
+
+- name: create db sv log run file
+  template:
+    src=../templates/log_run.j2
+    dest=/home/ubuntu/sv/db/log/run
+    mode="0700"
+
+- name: create service symlink
+  file: src=/home/ubuntu/sv/db dest=/home/ubuntu/service/db state=link

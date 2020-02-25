@@ -2,3 +2,4 @@
 - hosts: digitalocean
   roles:
     - app
+    - db
