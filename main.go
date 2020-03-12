@@ -20,6 +20,11 @@ func main() {
 		})
 	}
 	http.Handle("/", handler)
+	http.Handle("/api/ping", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Add("access-control-allow-origin", "*")
+		w.Header().Add("content-type", "application/json")
+		w.Write([]byte(`{"data": "pong"}`))
+	}))
 	log.Println("Listening on", *listen)
 	log.Fatal(http.ListenAndServe(*listen, nil))
 }
