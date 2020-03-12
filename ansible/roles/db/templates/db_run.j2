@@ -2,5 +2,9 @@
 docker kill db
 docker rm db
 docker pull postgres:12-alpine
-docker run --name db --rm -v /home/ubuntu/data:/var/lib/postgresql/data -e POSTGRES_PASSWORD={{postgres_password}} --publish=5432:5432 \
+docker run --name db --rm \
+  --user "$(id -u):$(id -g)" \
+  -v /home/ubuntu/data:/var/lib/postgresql/data \
+  -v /etc/passwd:/etc/passwd:ro \
+  -e POSTGRES_PASSWORD={{postgres_password}} --publish=127.0.0.1:5432:5432 \
   postgres:12-alpine 2>&1
