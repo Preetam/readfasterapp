@@ -3,9 +3,10 @@ services:
   app:
     build:
       context: .
+      dockerfile: ./Dockerfile_dev
     ports:
       - 8000:8000
-    entrypoint: "/serve/main -listen 0.0.0.0:8000"
+    entrypoint: "/serve/main -listen 0.0.0.0:8000 -dev-mode"
     working_dir: "/serve"
 
   database:
