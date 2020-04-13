@@ -16,7 +16,7 @@ a {
 	font-size: 2.4rem;
 	line-height: 1.5;
 	min-height: 3m;
-	padding: 8rem 1rem;
+	padding: 8rem 1rem 4rem 1rem;
 	text-align: center;
 }
 
@@ -46,7 +46,7 @@ a {
 }
 
 .rfa-landing-section {
-	margin-bottom: 20rem;
+	margin-bottom: 12rem;
 }
 
 .rfa-landing-section h2 {
