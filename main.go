@@ -25,8 +25,6 @@ func main() {
 	devMode := flag.Bool("dev-mode", false, "Enables developer mode")
 	flag.Parse()
 
-	log.Println("using connection string", *dbConnectionString)
-
 	db, err := sql.Open("postgres", *dbConnectionString)
 	if err != nil {
 		time.Sleep(2 * time.Second)
