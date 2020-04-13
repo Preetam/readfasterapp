@@ -23,6 +23,6 @@
   file: src=/home/ubuntu/sv/app dest=/home/ubuntu/service/app state=link
 
 - name: copy Caddyfile
-  template: src=../templates/Caddyfile.j2 dest=/home/ubuntu/sv/proxy/vhosts/dev.readfaster.app
+  template: src=../templates/Caddyfile.j2 dest=/home/ubuntu/sv/proxy/vhosts/readfaster.app
   notify:
     - restart caddy
