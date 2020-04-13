@@ -8,6 +8,8 @@ services:
       - 8000:8000
     entrypoint: "/serve/main -listen 0.0.0.0:8000 -dev-mode"
     working_dir: "/serve"
+    volumes:
+      - "./ui/public:/serve/ui"
 
   database:
     image: postgres:12-alpine
