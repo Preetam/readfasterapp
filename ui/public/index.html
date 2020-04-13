@@ -1,8 +1,35 @@
 <!DOCTYPE html>
 <head>
+	<title>ReadFaster.app</title>
+	<link rel="stylesheet" href="/landing.css"/>
+	<link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/pure-min.css" integrity="sha384-oAOxQR6DkCoMliIh8yFnu25d7Eq/PHS21PClpwjOTeU2jRSq11vu66rf90/cZr47" crossorigin="anonymous">
+	<script src="https://www.google.com/recaptcha/api.js?render=6Le3CekUAAAAAJx8XX3nmtv5JmtKuRfFlD6MADO_"></script>
 </head>
-<body><div id="app"></div>
+<body>
+	<div class="rfa-landing-header">
+		<div><strong>ReadFaster</strong> helps you finish reading your books.</div>
+		<a class="rfa-get-started-button" href="#coming-soon">Coming soon</a>
+	</div>
+	<div class="rfa-container">
+		<div class="rfa-landing-section">
+			<h2>How it works</h2>
+			<p>ReadFaster is an app to help you catch up on books in your reading list by managing reading time and progress.</p>
+			<p></p>
+		</div>
 
-<script src="/js/app.js"></script>
+		<div class="rfa-landing-section" id="coming-soon">
+			<h2>Coming soon.</h2>
+			<p>ReadFaster has not launched yet. Subscribe below to get notified about the launch.</p>
+
+			<form action="/launch-subscribe" class="rfa-subscribe-form">
+				<input type="email" name="email" placeholder="Your email address">
+				<button type="submit" class="rfa-button">Submit</button>
+			</form>
+		</div>
+
+		<div class="rfa-footer">
+			<p>Copyright &copy; 2020 Preetam Jinka.</p>
+		</div>
+	</div>
 </body>
 </html>

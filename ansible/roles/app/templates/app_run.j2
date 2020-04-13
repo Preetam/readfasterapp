@@ -4,4 +4,6 @@ docker rm app
 docker pull docker.pkg.github.com/preetam/readfasterapp/app:{{build_sha}}
 docker run --name app --rm -w /serve --publish=8000:8000 \
   --entrypoint /serve/main docker.pkg.github.com/preetam/readfasterapp/app:{{build_sha}} \
-  -listen=:8000 2>&1
+  -listen=:8000 \
+  -db 'postgres://postgres:{{postgres_password}}@127.0.0.1:5432/rfa?sslmode=disable' \
+  2>&1

@@ -1,0 +1,88 @@
+/* Landing */
+
+@import url('https://rsms.me/inter/inter.css');
+
+body {
+	margin: 0;
+	padding: 0;
+	font-family: 'Inter';
+}
+
+a {
+	color: black;
+}
+
+.rfa-landing-header {
+	font-size: 2.8rem;
+	min-height: 3m;
+	padding: 8rem 1rem 6rem 1rem;
+	text-align: center;
+}
+
+.rfa-get-started-button {
+	color: black;
+	display: inline-block;
+	border: 1px #333 solid;
+	text-transform: uppercase;
+	font-size: 1rem;
+	margin: 3rem;
+	padding: 4px;
+	cursor: pointer;
+	text-decoration: none;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.rfa-container {
+	padding: 2rem;
+	width: 60rem;
+	max-width: 90%;
+	margin: 0 auto;
+}
+
+.rfa-landing-section {
+	margin-bottom: 10rem;
+}
+
+.rfa-landing-section h2 {
+	font-size: 2rem;
+}
+
+.rfa-landing-section p {
+	font-size: 1.3rem;
+	font-weight: 300;
+	line-height: 1.7;
+}
+
+.rfa-subscribe-form {
+	margin: 1rem auto;
+	text-align: center;
+}
+
+.rfa-subscribe-form input {
+	background: white;
+	padding: 0 10px;
+	margin: 0;
+	height: 30px;
+	font-size: 18px;
+	border: 1px solid black;
+	display: inline-block;
+}
+
+.rfa-subscribe-form button {
+	background: white;
+	padding: 0 10px;
+	margin: 0;
+	height: 32px;
+	font-size: 18px;
+	border: 1px solid black;
+	display: inline-block;
+}
+
+.rfa-footer {
+	font-size: 0.8rem;
+}

@@ -6,7 +6,7 @@ services:
       dockerfile: ./Dockerfile_dev
     ports:
       - 8000:8000
-    entrypoint: "/serve/main -listen 0.0.0.0:8000 -dev-mode"
+    entrypoint: "/serve/main -listen 0.0.0.0:8000 -db 'postgres://postgres:postgres@database:5432/rfa?sslmode=disable' -dev-mode"
     working_dir: "/serve"
     volumes:
       - "./ui/public:/serve/ui"
@@ -14,5 +14,9 @@ services:
   database:
     image: postgres:12-alpine
     restart: always
+    ports:
+      - 5432:5432
+    volumes:
+      - "./db/setup:/docker-entrypoint-initdb.d"
     environment:
       POSTGRES_PASSWORD: postgres
