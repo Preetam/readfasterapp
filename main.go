@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/badoux/checkmail"
 	_ "github.com/lib/pq"
 )
 
@@ -54,6 +55,12 @@ func main() {
 	http.Handle("/launch-subscribe", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		time.Sleep(2 * time.Second)
 		email := r.URL.Query().Get("email")
+		if err = checkmail.ValidateFormat(email); err != nil {
+			log.Println(err)
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write([]byte(`Is your email address correct? It doesn't look correct.`))
+			return
+		}
 		_, err := db.Exec("INSERT INTO launch_subscribers (email) VALUES ($1) ON CONFLICT DO NOTHING", email)
 		if err == nil {
 			http.Redirect(w, r, "/subscribed.html", http.StatusSeeOther)
