@@ -13,9 +13,10 @@ a {
 }
 
 .rfa-landing-header {
-	font-size: 2.8rem;
+	font-size: 2.4rem;
+	line-height: 1.5;
 	min-height: 3m;
-	padding: 8rem 1rem 6rem 1rem;
+	padding: 8rem 1rem;
 	text-align: center;
 }
 
@@ -40,12 +41,12 @@ a {
 .rfa-container {
 	padding: 2rem;
 	width: 60rem;
-	max-width: 90%;
+	max-width: 80%;
 	margin: 0 auto;
 }
 
 .rfa-landing-section {
-	margin-bottom: 10rem;
+	margin-bottom: 20rem;
 }
 
 .rfa-landing-section h2 {
@@ -66,7 +67,7 @@ a {
 .rfa-subscribe-form input {
 	background: white;
 	padding: 0 10px;
-	margin: 0;
+	margin: 10px 0;
 	height: 30px;
 	font-size: 18px;
 	border: 1px solid black;
@@ -76,7 +77,7 @@ a {
 .rfa-subscribe-form button {
 	background: white;
 	padding: 0 10px;
-	margin: 0;
+	margin: 10px 0;
 	height: 32px;
 	font-size: 18px;
 	border: 1px solid black;
