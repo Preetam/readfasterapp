@@ -2,7 +2,23 @@
 
 @import url('https://rsms.me/inter/inter.css');
 
+:root {
+	--main-bg-color: white;
+	--main-fg-color: black;
+	--button-border-color: #333;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--main-bg-color: black;
+		--main-fg-color: white;
+		--button-border-color: #ccc;
+	}
+}
+
 body {
+	background: var(--main-bg-color);
+	color: var(--main-fg-color);
 	margin: 0;
 	padding: 0;
 	font-family: 'Inter', -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
@@ -11,7 +27,7 @@ body {
 }
 
 a {
-	color: black;
+	color: var(--main-fg-color);
 }
 
 .rfa-landing-header {
@@ -23,9 +39,9 @@ a {
 }
 
 .rfa-get-started-button {
-	color: black;
+	color: var(--main-fg-color);
 	display: inline-block;
-	border: 1px #333 solid;
+	border: 1px var(--button-border-color) solid;
 	text-transform: uppercase;
 	font-size: 1rem;
 	margin: 3rem;
@@ -57,7 +73,6 @@ a {
 
 .rfa-landing-section p {
 	font-size: 1.3rem;
-	font-weight: 300;
 	line-height: 1.7;
 }
 
@@ -67,22 +82,22 @@ a {
 }
 
 .rfa-subscribe-form input {
-	background: white;
+	background: var(--main-bg-color);
 	padding: 0 10px;
 	margin: 10px 0;
 	height: 30px;
-	font-size: 18px;
-	border: 1px solid black;
+	font-size: 14px;
+	border: 1px solid var(--main-fg-color);
 	display: inline-block;
 }
 
 .rfa-subscribe-form button {
-	background: white;
+	background: var(--main-bg-color);;
 	padding: 0 10px;
 	margin: 10px 0;
 	height: 32px;
-	font-size: 18px;
-	border: 1px solid black;
+	font-size: 14px;
+	border: 1px solid var(--main-fg-color);
 	display: inline-block;
 }
 
@@ -94,11 +109,7 @@ a {
 
 .rfa-landing-section p.rfa-recaptcha-terms {
 	font-size: 12px;
-	color: #888;
 	max-width: 280px;
 	margin: 0 auto;
-}
-
-.rfa-landing-section p.rfa-recaptcha-terms a {
-	color: #888;
+	opacity: 0.4;
 }
