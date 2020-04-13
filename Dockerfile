@@ -16,7 +16,7 @@ FROM alpine
 RUN mkdir -p /serve
 
 COPY --from=build-go /src/main /serve/main
-COPY --from=build-ui /ui/build /serve/ui
+COPY --from=build-ui /ui/public /serve/ui
 
 COPY entrypoint.sh /serve/entrypoint.sh
 
