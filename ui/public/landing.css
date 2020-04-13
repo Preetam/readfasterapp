@@ -89,3 +89,16 @@ a {
 .rfa-footer {
 	font-size: 0.8rem;
 }
+
+.grecaptcha-badge{display:none}
+
+.rfa-landing-section p.rfa-recaptcha-terms {
+	font-size: 12px;
+	color: #888;
+	max-width: 280px;
+	margin: 0 auto;
+}
+
+.rfa-landing-section p.rfa-recaptcha-terms a {
+	color: #888;
+}

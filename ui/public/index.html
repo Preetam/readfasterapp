@@ -3,6 +3,7 @@
 	<title>ReadFaster.app</title>
 	<link rel="stylesheet" href="/landing.css"/>
 	<link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/pure-min.css" integrity="sha384-oAOxQR6DkCoMliIh8yFnu25d7Eq/PHS21PClpwjOTeU2jRSq11vu66rf90/cZr47" crossorigin="anonymous">
+	<script src="https://www.google.com/recaptcha/api.js?render=6Le3CekUAAAAAJx8XX3nmtv5JmtKuRfFlD6MADO_"></script>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/>
 </head>
 <body>
@@ -23,7 +24,9 @@
 
 			<form action="/launch-subscribe" class="rfa-subscribe-form">
 				<input type="email" name="email" placeholder="Your email address">
+				<input type="hidden" name="verify" id="recaptcha-verify">
 				<button type="submit" class="rfa-button">Submit</button>
+				<p class="rfa-recaptcha-terms">This form is protected by reCAPTCHA and is subject to the Google <a href="//www.google.com/intl/en/policies/privacy/">Privacy Policy</a> and <a href="//www.google.com/intl/en/policies/terms/">Terms of Service</a>. </p>
 			</form>
 		</div>
 
@@ -31,5 +34,13 @@
 			<p>Copyright &copy; 2020 Preetam Jinka.</p>
 		</div>
 	</div>
+
+	<script>
+		grecaptcha.ready(function() {
+			grecaptcha.execute('6Le3CekUAAAAAJx8XX3nmtv5JmtKuRfFlD6MADO_', {action: 'homepage'}).then(function(token) {
+				document.getElementById("recaptcha-verify").value = token;
+			});
+		});
+		</script>
 </body>
 </html>

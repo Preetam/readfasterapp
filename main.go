@@ -2,9 +2,11 @@ package main
 
 import (
 	"database/sql"
+	"encoding/json"
 	"flag"
 	"log"
 	"net/http"
+	"net/url"
 	"time"
 
 	"github.com/badoux/checkmail"
@@ -23,6 +25,7 @@ func setupDatabase(db *sql.DB) error {
 func main() {
 	listen := flag.String("listen", "127.0.0.1:8000", "Listen address")
 	dbConnectionString := flag.String("db", "", "DB connection string")
+	recaptchaSecret := flag.String("recaptcha-secret", "", "reCAPTCHA secret")
 	devMode := flag.Bool("dev-mode", false, "Enables developer mode")
 	flag.Parse()
 
@@ -53,8 +56,53 @@ func main() {
 	}))
 
 	http.Handle("/launch-subscribe", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		time.Sleep(2 * time.Second)
 		email := r.URL.Query().Get("email")
+		verify := r.URL.Query().Get("verify")
+
+		if !*devMode {
+			if verify == "" {
+				w.WriteHeader(http.StatusBadRequest)
+				w.Write([]byte(`Missing verify parameter.`))
+				return
+			} else {
+				// verify CAPTCHA
+				resp, err := http.PostForm("https://www.google.com/recaptcha/api/siteverify", url.Values{
+					"secret":   []string{*recaptchaSecret},
+					"response": []string{verify},
+				})
+				if err != nil {
+					log.Println(err)
+					w.WriteHeader(http.StatusInternalServerError)
+					w.Write([]byte(`Something went wrong!`))
+					return
+				}
+				recaptchaAPIResponse := struct {
+					Success bool    `json:"success"`
+					Score   float64 `json:"score"`
+				}{}
+
+				defer resp.Body.Close()
+				err = json.NewDecoder(resp.Body).Decode(&recaptchaAPIResponse)
+				if err != nil {
+					log.Println(err)
+					w.WriteHeader(http.StatusInternalServerError)
+					w.Write([]byte(`Something went wrong!`))
+					return
+				}
+				log.Println("recaptcha response:", recaptchaAPIResponse)
+				if !recaptchaAPIResponse.Success {
+					w.WriteHeader(http.StatusBadRequest)
+					w.Write([]byte(`Bad verify parameter.`))
+					return
+				}
+				if recaptchaAPIResponse.Score < 0.5 {
+					w.WriteHeader(http.StatusBadRequest)
+					w.Write([]byte(`Sorry, you seem like a bot. Please try again.`))
+					return
+				}
+			}
+		}
+
 		if err = checkmail.ValidateFormat(email); err != nil {
 			log.Println(err)
 			w.WriteHeader(http.StatusBadRequest)

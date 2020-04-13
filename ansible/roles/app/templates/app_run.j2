@@ -6,4 +6,5 @@ docker run --name app --rm -w /serve --net=host --publish=8000:8000 \
   --entrypoint /serve/main docker.pkg.github.com/preetam/readfasterapp/app:{{build_sha}} \
   -listen=:8000 \
   -db '{{postgres_connection_string}}' \
+  -recaptcha-secret '{{recaptcha_secret}}' \
   2>&1
