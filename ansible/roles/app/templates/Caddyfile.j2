@@ -4,15 +4,19 @@ dev.readfaster.app {
 	tls cert@preet.am
 }
 
-www.readfaster.app, prod.readfaster.app {
+prod.readfaster.app {
 	gzip
 	proxy / localhost:8000
 	tls cert@preet.am
 }
 
 readfaster.app {
+	header / -server
 	gzip
 	proxy / localhost:8000
 	tls cert@preet.am
-	redir https://www.readfaster.app{uri}
+	redir {
+		if {>from-cloudfront} not true
+		/ https://www.readfaster.app{uri}
+	}
 }
