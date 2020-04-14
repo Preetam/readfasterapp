@@ -89,6 +89,7 @@ a {
 	font-size: 14px;
 	border: 1px solid var(--main-fg-color);
 	display: inline-block;
+	border-radius: 0;
 }
 
 .rfa-subscribe-form button {
