@@ -11,7 +11,8 @@ func setupDatabase(db *sql.DB) error {
 		/* 001 */ `CREATE TABLE IF NOT EXISTS launch_subscribers (email TEXT PRIMARY KEY)`,
 		/* 002 */ `CREATE EXTENSION IF NOT EXISTS "pgcrypto"`,
 		/* 003 */ `CREATE TABLE users (id TEXT PRIMARY KEY, email TEXT NOT NULL, password TEXT NOT NULL DEFAULT '');
-		           CREATE UNIQUE INDEX idx_users_email ON users (email)`,
+				   CREATE UNIQUE INDEX idx_users_email ON users (email)`,
+		/* 004 */ `CREATE TABLE sessions (id TEXT PRIMARY KEY, user_id TEXT NOT NULL, expires_at TIMESTAMP NOT NULL)`,
 	}
 
 	tx, err := db.Begin()

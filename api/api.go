@@ -3,6 +3,7 @@ package api
 import (
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"net/url"
@@ -53,11 +54,13 @@ func Run(opts *Options) error {
 
 	// API
 	r.HandleFunc("/api/register", api.HandleAPIRegister)
+	r.HandleFunc("/api/login", api.HandleAPILogin)
 	r.HandleFunc("/api/ping", api.HandleAPIPing)
 
 	// Static
 	r.HandleFunc("/launch-subscribe", api.HandleLaunchSubscribe)
 	r.HandleFunc("/app/auth", api.HandleAuth)
+	r.HandleFunc("/app/logout", api.HandleLogout)
 	r.PathPrefix("/").HandlerFunc(api.HandleRoot)
 
 	log.Println("Listening on", opts.Listen)
@@ -138,7 +141,25 @@ func (api *API) HandleLaunchSubscribe(w http.ResponseWriter, r *http.Request) {
 }
 
 func (api *API) HandleAPIPing(w http.ResponseWriter, r *http.Request) {
-	w.Header().Add("access-control-allow-origin", "*")
+	cookie, err := r.Cookie("rfa")
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
+	// Get user ID based on this session.
+	userID := ""
+	err = api.db.QueryRow("SELECT user_id FROM sessions WHERE id = $1 AND expires_at > now()", cookie.Value).Scan(&userID)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+		log.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
 	w.Header().Add("content-type", "application/json")
-	w.Write([]byte(`{"data": "pong"}`))
+	w.Write([]byte(fmt.Sprintf(`{"user_id": "%s"}`, userID)))
 }
