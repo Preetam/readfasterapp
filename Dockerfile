@@ -11,6 +11,8 @@ COPY ui /ui
 RUN cd /ui && npm i
 RUN cd /ui && npm run build
 
+RUN cd /ui/public/app && sed -i "s/app.js/app.js?$(date +%s)/" index.html
+
 FROM alpine
 
 RUN mkdir -p /serve
