@@ -1,3 +1,116 @@
+/* Landing */
+
+@import url('https://rsms.me/inter/inter.css');
+
+:root {
+	--main-bg-color: white;
+	--main-fg-color: black;
+	--button-border-color: #333;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--main-bg-color: black;
+		--main-fg-color: white;
+		--button-border-color: #ccc;
+	}
+}
+
 body {
-  font-family: "sans-serif";
+	background: var(--main-bg-color);
+	color: var(--main-fg-color);
+	margin: 0;
+	padding: 0;
+	font-family: 'Inter', -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+	-moz-osx-font-smoothing: grayscale;
+	-webkit-font-smoothing: antialiased;
+}
+
+a {
+	color: var(--main-fg-color);
+}
+
+.rfa-landing-header {
+	font-size: 2.4rem;
+	line-height: 1.5;
+	min-height: 3m;
+	padding: 8rem 1rem 4rem 1rem;
+	text-align: center;
+}
+
+.rfa-get-started-button {
+	color: var(--main-fg-color);
+	display: inline-block;
+	border: 1px var(--button-border-color) solid;
+	text-transform: uppercase;
+	font-size: 1rem;
+	margin: 3rem;
+	padding: 4px;
+	cursor: pointer;
+	text-decoration: none;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.rfa-container {
+	padding: 2rem;
+	width: 60rem;
+	max-width: 80%;
+	margin: 0 auto;
+}
+
+.rfa-landing-section {
+	margin-bottom: 12rem;
+}
+
+.rfa-landing-section h2 {
+	font-size: 2rem;
+}
+
+.rfa-landing-section p {
+	font-size: 1.3rem;
+	line-height: 1.7;
+}
+
+.rfa-subscribe-form {
+	margin: 1rem auto;
+	text-align: center;
+}
+
+.rfa-subscribe-form input {
+	background: var(--main-bg-color);
+	padding: 0 10px;
+	margin: 10px 0;
+	height: 30px;
+	font-size: 14px;
+	border: 1px solid var(--main-fg-color);
+	display: inline-block;
+	border-radius: 0;
+}
+
+.rfa-subscribe-form button {
+	background: var(--main-bg-color);;
+	padding: 0 10px;
+	margin: 10px 0;
+	height: 32px;
+	font-size: 14px;
+	border: 1px solid var(--main-fg-color);
+	display: inline-block;
+}
+
+.rfa-footer {
+	font-size: 0.8rem;
+}
+
+.grecaptcha-badge{display:none}
+
+.rfa-landing-section p.rfa-recaptcha-terms {
+	font-size: 12px;
+	max-width: 280px;
+	margin: 0 auto;
+	opacity: 0.4;
 }
