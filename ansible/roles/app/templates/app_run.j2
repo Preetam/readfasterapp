@@ -7,4 +7,5 @@ docker run --name app --rm -w /serve --net=host --publish=8000:8000 \
   -listen=:8000 \
   -db '{{postgres_connection_string}}' \
   -recaptcha-secret '{{recaptcha_secret}}' \
+  -mailgun-key '{{mailgun_key}}' \
   2>&1

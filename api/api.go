@@ -12,18 +12,21 @@ import (
 	"github.com/badoux/checkmail"
 	"github.com/gorilla/mux"
 	_ "github.com/lib/pq"
+	"gopkg.in/mailgun/mailgun-go.v1"
 )
 
 type Options struct {
 	Listen          string
 	DBConnString    string
 	RecaptchaSecret string
+	MailgunKey      string
 	DevMode         bool
 }
 
 type API struct {
 	db              *sql.DB
 	recaptchaSecret string
+	mg              mailgun.Mailgun
 	devMode         bool
 }
 
@@ -42,6 +45,7 @@ func Run(opts *Options) error {
 	api := &API{
 		db:              db,
 		recaptchaSecret: opts.RecaptchaSecret,
+		mg:              mailgun.NewMailgun("mg.readfaster.app", opts.MailgunKey, ""),
 		devMode:         opts.DevMode,
 	}
 
@@ -53,6 +57,7 @@ func Run(opts *Options) error {
 
 	// Static
 	r.HandleFunc("/launch-subscribe", api.HandleLaunchSubscribe)
+	r.HandleFunc("/app/auth", api.HandleAuth)
 	r.PathPrefix("/").HandlerFunc(api.HandleRoot)
 
 	log.Println("Listening on", opts.Listen)
