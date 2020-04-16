@@ -53,9 +53,12 @@ func Run(opts *Options) error {
 	r := mux.NewRouter()
 
 	// API
-	r.HandleFunc("/api/register", api.HandleAPIRegister)
-	r.HandleFunc("/api/login", api.HandleAPILogin)
-	r.HandleFunc("/api/ping", api.HandleAPIPing)
+	r.Methods("POST").Path("/api/register").HandlerFunc(api.HandleAPIRegister)
+	r.Methods("POST").Path("/api/login").HandlerFunc(api.HandleAPILogin)
+	r.Methods("GET").Path("/api/ping").HandlerFunc(api.WithAuth(api.HandleAPIPing))
+	r.Methods("GET").Path("/api/reading_sessions").HandlerFunc(api.WithAuth(api.HandleAPIGetReadingSessions))
+	r.Methods("POST").Path("/api/reading_sessions").HandlerFunc(api.WithAuth(api.HandleAPIPostReadingSessions))
+	r.Methods("DELETE").Path("/api/reading_sessions/{reading_session_timestamp}").HandlerFunc(api.WithAuth(api.HandleAPIDeleteReadingSessions))
 
 	// Static
 	r.HandleFunc("/launch-subscribe", api.HandleLaunchSubscribe)
@@ -141,25 +144,13 @@ func (api *API) HandleLaunchSubscribe(w http.ResponseWriter, r *http.Request) {
 }
 
 func (api *API) HandleAPIPing(w http.ResponseWriter, r *http.Request) {
-	cookie, err := r.Cookie("rfa")
-	if err != nil {
-		w.WriteHeader(http.StatusUnauthorized)
-		return
-	}
-
-	// Get user ID based on this session.
-	userID := ""
-	err = api.db.QueryRow("SELECT user_id FROM sessions WHERE id = $1 AND expires_at > now()", cookie.Value).Scan(&userID)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			w.WriteHeader(http.StatusUnauthorized)
-			return
-		}
-		log.Println(err)
+	userIDVal := r.Context().Value(userIDContextKey)
+	if userIDVal == nil {
+		log.Println("missing user ID in context")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-
+	userID := userIDVal.(string)
 	w.Header().Add("content-type", "application/json")
 	w.Write([]byte(fmt.Sprintf(`{"user_id": "%s"}`, userID)))
 }

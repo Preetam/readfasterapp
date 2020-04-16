@@ -1,6 +1,7 @@
 package api
 
 import (
+	"context"
 	"crypto/sha512"
 	"crypto/subtle"
 	"database/sql"
@@ -15,6 +16,10 @@ import (
 
 	"github.com/badoux/checkmail"
 	"gopkg.in/mailgun/mailgun-go.v1"
+)
+
+var (
+	userIDContextKey = struct{}{}
 )
 
 func (api *API) HandleAPIRegister(w http.ResponseWriter, r *http.Request) {
@@ -98,7 +103,7 @@ Thanks for registering. Click on the following link to verify your email address
 
 https://www.readfaster.app/app/auth?email=%s&ts=%s&verify=%x
 
-Cheers!`, url.PathEscape(email), ts, sha512.Sum512_256([]byte(ts+api.recaptchaSecret+email)))
+Cheers!`, url.PathEscape(email), ts, sha512.Sum512_256([]byte(api.recaptchaSecret+ts+email)))
 
 	if api.devMode {
 		log.Println(email, emailContents)
@@ -193,7 +198,7 @@ func (api *API) HandleAPILogin(w http.ResponseWriter, r *http.Request) {
 
 https://www.readfaster.app/app/auth?email=%s&ts=%s&verify=%x
 
-Cheers!`, url.PathEscape(email), ts, sha512.Sum512_256([]byte(ts+api.recaptchaSecret+email)))
+Cheers!`, url.PathEscape(email), ts, sha512.Sum512_256([]byte(api.recaptchaSecret+ts+email)))
 
 	if api.devMode {
 		log.Println(email, emailContents)
@@ -236,7 +241,7 @@ func (api *API) HandleAuth(w http.ResponseWriter, r *http.Request) {
 	}
 
 	sessionID := ""
-	err = api.db.QueryRow(`INSERT INTO sessions (id, user_id, expires_at)
+	err = api.db.QueryRow(`INSERT INTO auth_sessions (id, user_id, expires_at)
 							VALUES (encode(gen_random_bytes(16), 'hex'),
 									(SELECT id FROM users WHERE email = $1),
 									now()+interval '7 day') RETURNING id`,
@@ -268,7 +273,7 @@ func (api *API) HandleLogout(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = api.db.Exec("DELETE FROM sessions WHERE id = $1", cookie.Value)
+	_, err = api.db.Exec("DELETE FROM auth_sessions WHERE id = $1", cookie.Value)
 	if err != nil {
 		log.Println(err)
 	}
@@ -283,4 +288,30 @@ func (api *API) HandleLogout(w http.ResponseWriter, r *http.Request) {
 		HttpOnly: true,
 	})
 	w.Write([]byte(`Logged out.`))
+}
+
+// WithAuth wraps a handler with authentication checks.
+func (api *API) WithAuth(f func(w http.ResponseWriter, r *http.Request)) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		cookie, err := r.Cookie("rfa")
+		if err != nil {
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+
+		// Get user ID based on this session.
+		userID := ""
+		err = api.db.QueryRow("SELECT user_id FROM auth_sessions WHERE id = $1 AND expires_at > now()", cookie.Value).Scan(&userID)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				w.WriteHeader(http.StatusUnauthorized)
+				return
+			}
+			log.Println(err)
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+		f(w, r.WithContext(context.WithValue(r.Context(), userIDContextKey, userID)))
+	}
 }

@@ -13,6 +13,13 @@ func setupDatabase(db *sql.DB) error {
 		/* 003 */ `CREATE TABLE users (id TEXT PRIMARY KEY, email TEXT NOT NULL, password TEXT NOT NULL DEFAULT '');
 				   CREATE UNIQUE INDEX idx_users_email ON users (email)`,
 		/* 004 */ `CREATE TABLE sessions (id TEXT PRIMARY KEY, user_id TEXT NOT NULL, expires_at TIMESTAMP NOT NULL)`,
+		/* 005 */ `ALTER TABLE sessions RENAME TO auth_sessions`,
+		/* 006 */ `CREATE TABLE reading_sessions (
+					   user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+					   timestamp BIGINT NOT NULL,
+					   duration  INT NOT NULL,
+					   PRIMARY KEY (user_id, timestamp)
+					)`,
 	}
 
 	tx, err := db.Begin()
