@@ -97,6 +97,11 @@ class RecordReadingSession extends Component {
 	}
 
 	submit(refresh) {
+		let totalDuration = this.state.duration;
+		if (this.state.now && this.state.start) {
+			totalDuration += (this.state.now - this.state.start);
+		}
+		const totalSeconds = Math.floor(totalDuration/1000);
 		return (function(e) {
 			e.preventDefault();
 			const totalMinutes = Math.floor(totalSeconds / 60);
@@ -109,8 +114,8 @@ class RecordReadingSession extends Component {
 			}).then(() => {
 				refresh()
 			})
-			this.setState({ duration: 0 })
-			e.target.reset()
+			this.setState({ duration: 0, start: null, now: null, })
+			clearInterval(this.timer);
 		}.bind(this))
 	}
 
