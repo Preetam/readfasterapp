@@ -37,6 +37,7 @@ a {
 	margin: 10px 0;
 	height: 30px;
 	font-size: 14px;
+	line-height: 30px;
 	border: 1px solid var(--main-fg-color);
 	display: inline-block;
 	border-radius: 0;
@@ -50,9 +51,20 @@ a {
 	margin: 10px 0;
 	height: 32px;
 	font-size: 14px;
+	line-height: 32px;
 	border: 1px solid var(--main-fg-color);
 	display: inline-block;
 	margin-right: 4px;
+	cursor: pointer;
 }
+
+.rfa-button-small {
+	font-size: 10px;
+	height: 20px;
+	line-height: 20px;
+	padding: 0 4px;
+	margin: 0 4px;
+}
+
 
 .grecaptcha-badge{display:none}
