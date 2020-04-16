@@ -220,7 +220,7 @@ func (api *API) HandleAuth(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	requestHash := sha512.Sum512_256([]byte(ts + api.recaptchaSecret + email))
+	requestHash := sha512.Sum512_256([]byte(api.recaptchaSecret + ts + email))
 	if subtle.ConstantTimeCompare(requestHash[:], verifyBytes) != 1 {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte(`Bad verify parameter.`))
