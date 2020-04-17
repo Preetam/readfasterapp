@@ -200,7 +200,6 @@ class App extends Component {
 			<${Login} path="/app/login" />
 		</${Router}>
 		</div>
-		<div class="rfa-footer">Status: alpha</div>
 		`;
 	}
 }
