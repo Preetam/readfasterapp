@@ -4,3 +4,19 @@
 	max-width: 80%;
 	margin: 0 auto;
 }
+
+.rfa-container {
+	height: 100%;
+}
+
+.rfa-footer {
+	padding: 2rem;
+	width: 40rem;
+	max-width: 80%;
+	margin: 0 auto;
+	position: absolute;
+	bottom: 0;
+	text-align: center;
+	border-top: 1px solid var(--main-fg-color);
+	font-size: 0.5rem;
+}

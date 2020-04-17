@@ -1,0 +1,16 @@
+.rfa-timer {
+	font-size: 1.5rem;
+}
+
+.rfa-reading-sessions-table {
+	width: 100%;
+	border-collapse: separate;
+}
+
+.rfa-reading-sessions-table th {
+	font-weight: normal;
+	text-align: left;
+	min-width: 80px;
+	border-bottom: 1px solid var(--main-fg-color);
+	border-spacing: 4rem;
+}

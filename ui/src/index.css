@@ -51,11 +51,15 @@ a {
 	margin: 10px 0;
 	height: 32px;
 	font-size: 14px;
-	line-height: 32px;
+	line-height: 30px;
 	border: 1px solid var(--main-fg-color);
 	display: inline-block;
 	margin-right: 4px;
 	cursor: pointer;
+}
+
+.rfa-button:disabled {
+	opacity: 0.3;
 }
 
 .rfa-button-small {

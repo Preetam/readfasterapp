@@ -11,7 +11,6 @@ class Home extends Component {
 		return html`
 			<${CheckLogin} userID=${userID}/>
 			<div>
-				<h2>Home</h2>
 				<${ReadingSessions} />
 			</div>
 		`
@@ -47,10 +46,11 @@ class RegistrationForm extends Component {
 
 	render() {
 		return html`
+			<h3>Register</h3>
 			<form onSubmit=${this.onSubmit.bind(this)}>
-				<input type=email onInput=${this.onEmailInput.bind(this)}>Email</input>
+				<input class="rfa-input" name=email type=email placeholder="Your email address" onInput=${this.onEmailInput.bind(this)}>Email</input>
 				<input type=hidden name=verify id="register-verify"></input>
-				<button type="submit" disabled=${this.state.submitted}>Register</button>
+				<button class="rfa-button" type="submit" disabled=${this.state.submitted}>Register</button>
 			</form>
 			<script id="register-grecaptcha" src="https://www.google.com/recaptcha/api.js?render=6Le3CekUAAAAAJx8XX3nmtv5JmtKuRfFlD6MADO_"></script>
 			<script>
@@ -115,7 +115,7 @@ class LoginForm extends Component {
 		return html`
 			<h3>Login</h3>
 			<form onSubmit=${this.onSubmit.bind(this)}>
-				<input class='rfa-input' type=email placeholder='Your email address' onInput=${this.onEmailInput.bind(this)}>Email</input>
+				<input class='rfa-input' type=email name=email placeholder='Your email address' onInput=${this.onEmailInput.bind(this)}>Email</input>
 				<input type=hidden name=verify id="login-verify"></input>
 				<button class='rfa-button' type="submit" disabled=${this.state.submitted}>Login</button>
 			</form>
@@ -192,13 +192,15 @@ class App extends Component {
 			`
 		}
 		return html`
-		<div><h1>ReadFaster</h1></div>
 		<${Nav} userID=${this.state.userID} />
+		<div class="rfa-container">
 		<${Router}>
 			<${Home} path="/app/" userID=${this.state.userID} />
 			<${Register} path="/app/register" />
 			<${Login} path="/app/login" />
 		</${Router}>
+		</div>
+		<div class="rfa-footer">Status: alpha</div>
 		`;
 	}
 }
