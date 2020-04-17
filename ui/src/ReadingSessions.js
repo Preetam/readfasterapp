@@ -83,7 +83,6 @@ class RecordReadingSession extends Component {
 
 	reset() {
 		this.setState({ duration: 0, start: null, now: null, active: false, })
-
 		window.localStorage.removeItem("timer_state");
 	}
 
@@ -105,6 +104,7 @@ class RecordReadingSession extends Component {
 				refresh()
 			})
 			this.setState({ duration: 0, start: null, now: null, })
+			window.localStorage.removeItem("timer_state");
 			clearInterval(this.timer);
 		}.bind(this))
 	}
