@@ -67,14 +67,24 @@ func Run(opts *Options) error {
 	r.PathPrefix("/").HandlerFunc(api.HandleRoot)
 
 	log.Println("Listening on", opts.Listen)
-	return http.ListenAndServe(opts.Listen, r)
+
+	withLog := http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
+		fromCloudFront := req.Header.Get(("from-cloudfront")) == "true"
+		ip := getIP(req)
+		if fromCloudFront {
+			ip += " (CloudFront)"
+		}
+		log.Printf("[%s] %s %v", ip, req.Method, req.URL)
+		r.ServeHTTP(w, req)
+	})
+
+	return http.ListenAndServe(opts.Listen, withLog)
 }
 
 func (api *API) HandleRoot(w http.ResponseWriter, r *http.Request) {
 	if strings.HasPrefix(r.URL.Path, "/app/") {
 		r.URL.Path = "/app/"
 	}
-	log.Println(r.URL.Path)
 	http.FileServer(http.Dir("ui")).ServeHTTP(w, r)
 	return
 }

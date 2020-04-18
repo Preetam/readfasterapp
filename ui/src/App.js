@@ -35,7 +35,14 @@ class RegistrationForm extends Component {
 				email: this.state.email,
 				verify: document.getElementById('register-verify').value,
 			}),
-		});
+		}).then((response) => {
+			if (!response.ok) {
+				this.setState({ error: response.status + ": " + response.statusText })
+			}
+		})
+		.catch(((e) => {
+			this.state.error = e
+		}).bind(this))
 
 		this.setState({ submitted: true })
 	}
@@ -45,6 +52,16 @@ class RegistrationForm extends Component {
 	}
 
 	render() {
+		if (this.state.submitted) {
+			if (this.state.error) {
+				return html`
+					<p>Something went wrong! ${this.state.error}</p>
+				`
+			}
+			return html`
+				<p>Check your email for a magical login link.</p>
+			`
+		}
 		return html`
 			<h3>Register</h3>
 			<form onSubmit=${this.onSubmit.bind(this)}>

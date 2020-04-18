@@ -103,7 +103,7 @@ Thanks for registering. Click on the following link to verify your email address
 
 https://www.readfaster.app/app/auth?email=%s&ts=%s&verify=%x
 
-Cheers!`, url.PathEscape(email), ts, sha512.Sum512_256([]byte(api.recaptchaSecret+ts+email)))
+Cheers!`, url.QueryEscape(email), ts, sha512.Sum512_256([]byte(api.recaptchaSecret+ts+email)))
 
 	if api.devMode {
 		log.Println(email, emailContents)
@@ -198,7 +198,7 @@ func (api *API) HandleAPILogin(w http.ResponseWriter, r *http.Request) {
 
 https://www.readfaster.app/app/auth?email=%s&ts=%s&verify=%x
 
-Cheers!`, url.PathEscape(email), ts, sha512.Sum512_256([]byte(api.recaptchaSecret+ts+email)))
+Cheers!`, url.QueryEscape(email), ts, sha512.Sum512_256([]byte(api.recaptchaSecret+ts+email)))
 
 	if api.devMode {
 		log.Println(email, emailContents)
@@ -212,6 +212,8 @@ func (api *API) HandleAuth(w http.ResponseWriter, r *http.Request) {
 	email := r.URL.Query().Get("email")
 	ts := r.URL.Query().Get("ts")
 	verify := r.URL.Query().Get("verify")
+
+	log.Println("verify", email, ts, verify)
 
 	verifyBytes, err := hex.DecodeString(verify)
 	if err != nil {
