@@ -8,8 +8,12 @@ import ReadingSessions from './ReadingSessions';
 
 class Home extends Component {
 	render({ userID }) {
+		if (!userID) {
+			return html`
+				<${CheckLogin} userID=${userID}/>
+				`
+		}
 		return html`
-			<${CheckLogin} userID=${userID}/>
 			<div>
 				<${ReadingSessions} />
 			</div>
