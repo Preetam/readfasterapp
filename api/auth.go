@@ -108,7 +108,7 @@ Cheers!`, url.PathEscape(email), ts, sha512.Sum512_256([]byte(api.recaptchaSecre
 	if api.devMode {
 		log.Println(email, emailContents)
 	} else {
-		api.mg.Send(mailgun.NewMessage("noreply@readfaster.app", "Welcome to ReadFaster!", emailContents, email))
+		api.mg.Send(mailgun.NewMessage("ReadFaster <noreply@readfaster.app>", "Welcome to ReadFaster!", emailContents, email))
 	}
 	w.WriteHeader(http.StatusAccepted)
 }
@@ -203,7 +203,7 @@ Cheers!`, url.PathEscape(email), ts, sha512.Sum512_256([]byte(api.recaptchaSecre
 	if api.devMode {
 		log.Println(email, emailContents)
 	} else {
-		api.mg.Send(mailgun.NewMessage("noreply@readfaster.app", "ReadFaster login link", emailContents, email))
+		api.mg.Send(mailgun.NewMessage("ReadFaster <noreply@readfaster.app>", "ReadFaster login link", emailContents, email))
 	}
 	w.WriteHeader(http.StatusAccepted)
 }
