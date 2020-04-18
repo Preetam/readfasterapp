@@ -205,6 +205,37 @@ class ReadingSessionsTableRow extends Component {
 	}
 }
 
+class ReadingSessionsSummary extends Component {
+	render({ sessions }) {
+		const sessionsToday = sessions.filter(s => {
+			console.log(s, (new Date(s.timestamp*1000)).toLocaleDateString())
+			if ((new Date(s.timestamp*1000)).toLocaleDateString() == (new Date()).toLocaleDateString()) {
+				return true;
+			}
+		})
+
+		if (sessionsToday.length == 0) {
+			return html`
+			<div class="rfa-summary-heading">Nothing recorded for today.</div>
+			<div class="rfa-summary-time">Go read!</div>
+			`
+		}
+
+		const totalReadingSecondsToday = sessionsToday.map(s => s.duration).reduce((total, d) => (total+d));
+		const totalMinutes = Math.floor(totalReadingSecondsToday / 60);
+		const seconds = totalReadingSecondsToday%60;
+		return html`
+			<div class="rfa-summary-heading">Summary for today</div>
+			<div class="rfa-summary-time">${totalMinutes}m ${
+				seconds < 10 ?
+				'0' + seconds
+				: seconds}s
+			</div>
+			<div>Over ${sessionsToday.length} session${sessionsToday.length > 1 ? 's' : ''}</div>
+		`
+	}
+}
+
 class ReadingSessions extends Component {
 	constructor() {
 		super()
@@ -247,6 +278,9 @@ class ReadingSessions extends Component {
 		}
 
 		return html`
+			<div class="rfa-summary">
+				<${ReadingSessionsSummary} sessions=${this.state.sessions} />
+			</div>
 			<div>
 				<h4>Record a session</h4>
 				<p>Start recording a session.</p>
@@ -254,7 +288,7 @@ class ReadingSessions extends Component {
 			</div>
 
 			<div>
-				<h4>Previous sessions</h4>
+				<h4>Recent sessions</h4>
 				${this.state.sessions.length > 0 ?
 					html`<${ReadingSessionsTable} sessions=${this.state.sessions} refresh=${this.refreshList.bind(this)} />` :
 					html`<p>You haven’t recorded any sessions yet.</p>`}
