@@ -31,9 +31,9 @@ a {
 </style>
 </head>
 <body>
-<div style="font-family: 'Inter', -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif; max-width: 40rem; margin: 0 auto;">
+<div style="font-family: 'Inter', -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif; width: 40rem; margin: 0 auto; max-width: 90%">
 <div style="background-color: black; color: white; text-align: center; padding: 2rem; font-size: 1.3rem; font-weight: bold;">
-ReadFaster
+<a style="text-decoration: none; color: white;" href="/">ReadFaster</a>
 </div>
 
 <div style="margin: 2rem 0;">
