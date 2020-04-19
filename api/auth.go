@@ -15,7 +15,6 @@ import (
 	"time"
 
 	"github.com/badoux/checkmail"
-	"gopkg.in/mailgun/mailgun-go.v1"
 )
 
 var (
@@ -102,14 +101,24 @@ func (api *API) HandleAPIRegister(w http.ResponseWriter, r *http.Request) {
 Thanks for registering. Click on the following link to verify your email address and magically log in.
 
 https://www.readfaster.app/app/auth?email=%s&ts=%s&verify=%x
+`, url.QueryEscape(email), ts, sha512.Sum512_256([]byte(api.recaptchaSecret+ts+email)))
 
-Cheers!`, url.QueryEscape(email), ts, sha512.Sum512_256([]byte(api.recaptchaSecret+ts+email)))
+	htmlEmailContents := fmt.Sprintf(`<p>Welcome to ReadFaster!</p><p>Thanks for registering. Click on the following link to magically log in.</p>
+<p><a href="https://www.readfaster.app/app/auth?email=%s&ts=%s&verify=%x">Log in</a></p>
+	<p>If that doesn’t work, try pasting the following URL into your address bar.</p>
 
-	if api.devMode {
-		log.Println(email, emailContents)
-	} else {
-		api.mg.Send(mailgun.NewMessage("ReadFaster <noreply@readfaster.app>", "Welcome to ReadFaster!", emailContents, email))
+	<pre style="overflow: scroll;>https://www.readfaster.app/app/auth?email=%s&ts=%s&verify=%x</pre>
+`,
+		url.QueryEscape(email), ts, sha512.Sum512_256([]byte(api.recaptchaSecret+ts+email)),
+		url.QueryEscape(email), ts, sha512.Sum512_256([]byte(api.recaptchaSecret+ts+email)))
+
+	err = api.sendMail(email, "Welcome to ReadFaster!", emailContents, htmlEmailContents)
+	if err != nil {
+		log.Println("error sending email", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
 	}
+
 	w.WriteHeader(http.StatusAccepted)
 }
 
@@ -200,11 +209,21 @@ https://www.readfaster.app/app/auth?email=%s&ts=%s&verify=%x
 
 Cheers!`, url.QueryEscape(email), ts, sha512.Sum512_256([]byte(api.recaptchaSecret+ts+email)))
 
-	if api.devMode {
-		log.Println(email, emailContents)
-	} else {
-		api.mg.Send(mailgun.NewMessage("ReadFaster <noreply@readfaster.app>", "ReadFaster login link", emailContents, email))
+	htmlEmailContents := fmt.Sprintf(`<p>Click on the following link to magically log in.</p>
+	<p><a href="https://www.readfaster.app/app/auth?email=%s&ts=%s&verify=%x">Log in</a></p>
+	<p>If that doesn’t work, try pasting the following URL into your address bar.</p>
+
+	<pre style="overflow: scroll;>https://www.readfaster.app/app/auth?email=%s&ts=%s&verify=%x</pre>
+	`,
+		url.QueryEscape(email), ts, sha512.Sum512_256([]byte(api.recaptchaSecret+ts+email)),
+		url.QueryEscape(email), ts, sha512.Sum512_256([]byte(api.recaptchaSecret+ts+email)))
+
+	err = api.sendMail(email, "ReadFaster Login Link", emailContents, htmlEmailContents)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
 	}
+
 	w.WriteHeader(http.StatusAccepted)
 }
 

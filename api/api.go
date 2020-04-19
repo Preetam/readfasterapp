@@ -13,7 +13,7 @@ import (
 	"github.com/badoux/checkmail"
 	"github.com/gorilla/mux"
 	_ "github.com/lib/pq"
-	"gopkg.in/mailgun/mailgun-go.v1"
+	"github.com/mailgun/mailgun-go/v4"
 )
 
 type Options struct {
@@ -46,7 +46,7 @@ func Run(opts *Options) error {
 	api := &API{
 		db:              db,
 		recaptchaSecret: opts.RecaptchaSecret,
-		mg:              mailgun.NewMailgun("mg.readfaster.app", opts.MailgunKey, ""),
+		mg:              mailgun.NewMailgun("mg.readfaster.app", opts.MailgunKey),
 		devMode:         opts.DevMode,
 	}
 
