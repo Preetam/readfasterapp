@@ -104,7 +104,7 @@ https://www.readfaster.app/app/auth?email=%s&ts=%s&verify=%x
 `, url.QueryEscape(email), ts, sha512.Sum512_256([]byte(api.recaptchaSecret+ts+email)))
 
 	htmlEmailContents := fmt.Sprintf(`<p>Welcome to ReadFaster!</p><p>Thanks for registering. Click on the following link to magically log in:
-	<br><br>
+
 	<a style="font-weight: bold;" href="https://www.readfaster.app/app/auth?email=%s&ts=%s&verify=%x">Log in</a></p>
 `,
 		url.QueryEscape(email), ts, sha512.Sum512_256([]byte(api.recaptchaSecret+ts+email)))
@@ -207,7 +207,7 @@ https://www.readfaster.app/app/auth?email=%s&ts=%s&verify=%x
 Cheers!`, url.QueryEscape(email), ts, sha512.Sum512_256([]byte(api.recaptchaSecret+ts+email)))
 
 	htmlEmailContents := fmt.Sprintf(`<p>Click on the following link to magically log in:
-	<br><br>
+
 	<a style="font-weight: bold;" href="https://www.readfaster.app/app/auth?email=%s&ts=%s&verify=%x">Log in</a></p>
 	`,
 		url.QueryEscape(email), ts, sha512.Sum512_256([]byte(api.recaptchaSecret+ts+email)))

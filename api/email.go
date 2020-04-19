@@ -17,7 +17,7 @@ Cheers,
 --ReadFaster.app
 
 You are receiving this email because you signed up for ReadFaster.app.
-www.readfaster.app
+https://www.readfaster.app
 `))
 
 var emailTemplate = template.Must(template.New("email").Parse(`
@@ -28,15 +28,19 @@ var emailTemplate = template.Must(template.New("email").Parse(`
 a {
 	color: black;
 }
+
+p {
+	line-height: 1.75;
+}
 </style>
 </head>
 <body>
-<div style="font-family: 'Inter', -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif; width: 40rem; margin: 0 auto; max-width: 90%">
+<div style="font-family: 'Inter', -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif; font-size: 18px; width: 40rem; margin: 0 auto; max-width: 90%">
 <div style="background-color: black; color: white; text-align: center; padding: 2rem; font-size: 1.3rem; font-weight: bold;">
-<a style="text-decoration: none; color: white;" href="/">ReadFaster</a>
+<a style="text-decoration: none; color: white;" href="https://www.readfaster.app/">ReadFaster</a>
 </div>
 
-<div style="margin: 2rem 0;">
+<div style="margin: 2rem;">
 <p style="margin-bottom: 1rem;">Hello!</p>
 
 <div>
