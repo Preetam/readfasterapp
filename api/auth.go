@@ -103,13 +103,10 @@ Thanks for registering. Click on the following link to verify your email address
 https://www.readfaster.app/app/auth?email=%s&ts=%s&verify=%x
 `, url.QueryEscape(email), ts, sha512.Sum512_256([]byte(api.recaptchaSecret+ts+email)))
 
-	htmlEmailContents := fmt.Sprintf(`<p>Welcome to ReadFaster!</p><p>Thanks for registering. Click on the following link to magically log in.</p>
-<p><a href="https://www.readfaster.app/app/auth?email=%s&ts=%s&verify=%x">Log in</a></p>
-	<p>If that doesn’t work, try pasting the following URL into your address bar.</p>
+	htmlEmailContents := fmt.Sprintf(`<p>Welcome to ReadFaster!</p><p>Thanks for registering. Click on the following link to magically log in:
 
-	<pre style="overflow: scroll;">https://www.readfaster.app/app/auth?email=%s&ts=%s&verify=%x</pre>
+	<a style="font-weight: bold;" href="https://www.readfaster.app/app/auth?email=%s&ts=%s&verify=%x">Log in</a></p>
 `,
-		url.QueryEscape(email), ts, sha512.Sum512_256([]byte(api.recaptchaSecret+ts+email)),
 		url.QueryEscape(email), ts, sha512.Sum512_256([]byte(api.recaptchaSecret+ts+email)))
 
 	err = api.sendMail(email, "Welcome to ReadFaster!", emailContents, htmlEmailContents)
@@ -209,13 +206,10 @@ https://www.readfaster.app/app/auth?email=%s&ts=%s&verify=%x
 
 Cheers!`, url.QueryEscape(email), ts, sha512.Sum512_256([]byte(api.recaptchaSecret+ts+email)))
 
-	htmlEmailContents := fmt.Sprintf(`<p>Click on the following link to magically log in.</p>
-	<p><a href="https://www.readfaster.app/app/auth?email=%s&ts=%s&verify=%x">Log in</a></p>
-	<p>If that doesn’t work, try pasting the following URL into your address bar.</p>
+	htmlEmailContents := fmt.Sprintf(`<p>Click on the following link to magically log in:
 
-	<pre style="overflow: scroll;">https://www.readfaster.app/app/auth?email=%s&ts=%s&verify=%x</pre>
+	<a style="font-weight: bold;" href="https://www.readfaster.app/app/auth?email=%s&ts=%s&verify=%x">Log in</a></p>
 	`,
-		url.QueryEscape(email), ts, sha512.Sum512_256([]byte(api.recaptchaSecret+ts+email)),
 		url.QueryEscape(email), ts, sha512.Sum512_256([]byte(api.recaptchaSecret+ts+email)))
 
 	err = api.sendMail(email, "ReadFaster Login Link", emailContents, htmlEmailContents)
