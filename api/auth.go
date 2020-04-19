@@ -107,7 +107,7 @@ https://www.readfaster.app/app/auth?email=%s&ts=%s&verify=%x
 <p><a href="https://www.readfaster.app/app/auth?email=%s&ts=%s&verify=%x">Log in</a></p>
 	<p>If that doesn’t work, try pasting the following URL into your address bar.</p>
 
-	<pre style="overflow: scroll;>https://www.readfaster.app/app/auth?email=%s&ts=%s&verify=%x</pre>
+	<pre style="overflow: scroll;">https://www.readfaster.app/app/auth?email=%s&ts=%s&verify=%x</pre>
 `,
 		url.QueryEscape(email), ts, sha512.Sum512_256([]byte(api.recaptchaSecret+ts+email)),
 		url.QueryEscape(email), ts, sha512.Sum512_256([]byte(api.recaptchaSecret+ts+email)))
@@ -213,7 +213,7 @@ Cheers!`, url.QueryEscape(email), ts, sha512.Sum512_256([]byte(api.recaptchaSecr
 	<p><a href="https://www.readfaster.app/app/auth?email=%s&ts=%s&verify=%x">Log in</a></p>
 	<p>If that doesn’t work, try pasting the following URL into your address bar.</p>
 
-	<pre style="overflow: scroll;>https://www.readfaster.app/app/auth?email=%s&ts=%s&verify=%x</pre>
+	<pre style="overflow: scroll;">https://www.readfaster.app/app/auth?email=%s&ts=%s&verify=%x</pre>
 	`,
 		url.QueryEscape(email), ts, sha512.Sum512_256([]byte(api.recaptchaSecret+ts+email)),
 		url.QueryEscape(email), ts, sha512.Sum512_256([]byte(api.recaptchaSecret+ts+email)))
