@@ -17,11 +17,24 @@
 
 .rfa-summary {
 	text-align: center;
-	padding: 2rem;
+	display: flex;
+	flex-wrap: wrap;
 }
 
+.rfa-summary-section {
+	margin: 1rem 0;
+	flex: 100%;
+}
+
+@media screen and (min-width: 500px) {
+	.rfa-summary-section {
+		flex: 50%;
+	}
+}
+
+
 .rfa-summary-heading {
-	font-size: 0.5rem;
+	font-size: 0.75rem;
 	opacity: 0.8;
 	text-transform: uppercase;
 	font-weight: bold;

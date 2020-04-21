@@ -208,30 +208,61 @@ class ReadingSessionsTableRow extends Component {
 class ReadingSessionsSummary extends Component {
 	render({ sessions }) {
 		const sessionsToday = sessions.filter(s => {
-			console.log(s, (new Date(s.timestamp*1000)).toLocaleDateString())
 			if ((new Date(s.timestamp*1000)).toLocaleDateString() == (new Date()).toLocaleDateString()) {
 				return true;
 			}
 		})
 
+		const sessionsLast7Days = sessions.filter(s => {
+			const timestamp1WeekAgo = (new Date()).getTime()/1000-(7*86400);
+			if (s.timestamp >= timestamp1WeekAgo) {
+				return true;
+			}
+		})
+
+		let sessionsTodayHTML;
 		if (sessionsToday.length == 0) {
-			return html`
+			sessionsTodayHTML = html`
 			<div class="rfa-summary-heading">Nothing recorded for today.</div>
 			<div class="rfa-summary-time">Go read!</div>
 			`
+		} else {
+			const totalReadingSecondsToday = sessionsToday.map(s => s.duration).reduce((total, d) => (total+d));
+			const totalMinutes = Math.floor(totalReadingSecondsToday / 60);
+			const seconds = totalReadingSecondsToday%60;
+			sessionsTodayHTML = html`
+				<div class="rfa-summary-heading">Today</div>
+				<div class="rfa-summary-time">${totalMinutes}m ${
+					seconds < 10 ?
+					'0' + seconds
+					: seconds}s
+				</div>
+				<div>Over ${sessionsToday.length} session${sessionsToday.length > 1 ? 's' : ''}</div>`
 		}
 
-		const totalReadingSecondsToday = sessionsToday.map(s => s.duration).reduce((total, d) => (total+d));
-		const totalMinutes = Math.floor(totalReadingSecondsToday / 60);
-		const seconds = totalReadingSecondsToday%60;
+		let oneWeekAvgHTML;
+		if (sessionsToday.length == 0) {
+			oneWeekAvgHTML = html`
+			<div class="rfa-summary-heading">No 7-day average</div>
+			<div class="rfa-summary-time">Go read!</div>
+			`
+		} else {
+			const avg7Days = (sessionsLast7Days.map(s => s.duration).reduce((total, d) => (total+d)))/7;
+			const totalMinutes = Math.floor(avg7Days / 60);
+			const seconds = Math.floor(avg7Days)%60;
+			oneWeekAvgHTML = html`
+				<div class="rfa-summary-heading">7-day average</div>
+				<div class="rfa-summary-time">${totalMinutes}m ${
+					seconds < 10 ?
+					'0' + seconds
+					: seconds}s
+				</div>
+				<div>Over ${sessionsLast7Days.length} session${sessionsLast7Days.length > 1 ? 's' : ''}</div>`
+		}
+
 		return html`
-			<div class="rfa-summary-heading">Summary for today</div>
-			<div class="rfa-summary-time">${totalMinutes}m ${
-				seconds < 10 ?
-				'0' + seconds
-				: seconds}s
-			</div>
-			<div>Over ${sessionsToday.length} session${sessionsToday.length > 1 ? 's' : ''}</div>
+			<div class="rfa-summary-section">${sessionsTodayHTML}</div>
+			<div class="rfa-summary-section">${oneWeekAvgHTML}</div>
 		`
 	}
 }
