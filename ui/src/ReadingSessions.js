@@ -241,7 +241,7 @@ class ReadingSessionsSummary extends Component {
 		}
 
 		let oneWeekAvgHTML;
-		if (sessionsToday.length == 0) {
+		if (sessionsLast7Days.length == 0) {
 			oneWeekAvgHTML = html`
 			<div class="rfa-summary-heading">No 7-day average</div>
 			<div class="rfa-summary-time">Go read!</div>
