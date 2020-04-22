@@ -220,6 +220,28 @@ class ReadingSessionsSummary extends Component {
 			}
 		})
 
+		let avgOver7Days = 0;
+
+		let oneWeekAvgHTML;
+		if (sessionsLast7Days.length == 0) {
+			oneWeekAvgHTML = html`
+			<div class="rfa-summary-heading">No 7-day average</div>
+			<div class="rfa-summary-time">Go read!</div>
+			`
+		} else {
+			avgOver7Days = (sessionsLast7Days.map(s => s.duration).reduce((total, d) => (total+d)))/7;
+			const totalMinutes = Math.floor(avgOver7Days / 60);
+			const seconds = Math.floor(avgOver7Days)%60;
+			oneWeekAvgHTML = html`
+				<div class="rfa-summary-heading">7-day average</div>
+				<div class="rfa-summary-time">${totalMinutes}m ${
+					seconds < 10 ?
+					'0' + seconds
+					: seconds}s
+				</div>
+				<div>Over ${sessionsLast7Days.length} session${sessionsLast7Days.length > 1 ? 's' : ''}</div>`
+		}
+
 		let sessionsTodayHTML;
 		if (sessionsToday.length == 0) {
 			sessionsTodayHTML = html`
@@ -237,27 +259,9 @@ class ReadingSessionsSummary extends Component {
 					'0' + seconds
 					: seconds}s
 				</div>
-				<div>Over ${sessionsToday.length} session${sessionsToday.length > 1 ? 's' : ''}</div>`
-		}
-
-		let oneWeekAvgHTML;
-		if (sessionsLast7Days.length == 0) {
-			oneWeekAvgHTML = html`
-			<div class="rfa-summary-heading">No 7-day average</div>
-			<div class="rfa-summary-time">Go read!</div>
-			`
-		} else {
-			const avg7Days = (sessionsLast7Days.map(s => s.duration).reduce((total, d) => (total+d)))/7;
-			const totalMinutes = Math.floor(avg7Days / 60);
-			const seconds = Math.floor(avg7Days)%60;
-			oneWeekAvgHTML = html`
-				<div class="rfa-summary-heading">7-day average</div>
-				<div class="rfa-summary-time">${totalMinutes}m ${
-					seconds < 10 ?
-					'0' + seconds
-					: seconds}s
-				</div>
-				<div>Over ${sessionsLast7Days.length} session${sessionsLast7Days.length > 1 ? 's' : ''}</div>`
+				<div>Over ${sessionsToday.length} session${sessionsToday.length > 1 ? 's' : ''}</div>
+				${(function() {if (totalReadingSecondsToday > avgOver7Days) { return html`Beat your 7-day average!` }})()}
+				`
 		}
 
 		return html`
