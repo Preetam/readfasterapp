@@ -2,7 +2,6 @@
 <head>
 	<title>ReadFaster.app</title>
 	<link rel="stylesheet" href="/landing.css"/>
-	<link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/pure-min.css" integrity="sha384-oAOxQR6DkCoMliIh8yFnu25d7Eq/PHS21PClpwjOTeU2jRSq11vu66rf90/cZr47" crossorigin="anonymous">
 	<script src="https://www.google.com/recaptcha/api.js?render=6Le3CekUAAAAAJx8XX3nmtv5JmtKuRfFlD6MADO_"></script>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
 </head>
@@ -15,13 +14,10 @@
 		<div class="rfa-landing-section">
 			<h2>How it works</h2>
 			<p>ReadFaster is an app to help you catch up on books in your reading list by managing reading time and progress.</p>
-			<p></p>
 		</div>
-
 		<div class="rfa-landing-section" id="coming-soon">
 			<h2>Coming soon.</h2>
 			<p>We haven’t launched yet. Subscribe below to get notified about the launch.</p>
-
 			<form action="/launch-subscribe" class="rfa-subscribe-form">
 				<input type="email" name="email" placeholder="Your email address">
 				<input type="hidden" name="verify" id="recaptcha-verify">
@@ -29,18 +25,16 @@
 				<p class="rfa-recaptcha-terms">This form is protected by reCAPTCHA and is subject to the Google <a href="//www.google.com/intl/en/policies/privacy/">Privacy Policy</a> and <a href="//www.google.com/intl/en/policies/terms/">Terms of Service</a>. </p>
 			</form>
 		</div>
-
 		<div class="rfa-footer">
-			<p>Copyright &copy; 2020 Preetam Jinka.</p>
+			<p><a href="/legal.html">Legal</a></p>
 		</div>
 	</div>
-
 	<script>
 		grecaptcha.ready(function() {
 			grecaptcha.execute('6Le3CekUAAAAAJx8XX3nmtv5JmtKuRfFlD6MADO_', {action: 'homepage'}).then(function(token) {
 				document.getElementById("recaptcha-verify").value = token;
 			});
 		});
-		</script>
+	</script>
 </body>
 </html>

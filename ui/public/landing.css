@@ -30,6 +30,14 @@ a {
 	color: var(--main-fg-color);
 }
 
+hr {
+	max-width: 60%;
+	opacity: 0.4;
+	border: none;
+	background-color: var(--main-fg-color);
+	height: 1px;
+}
+
 .rfa-landing-header {
 	font-size: 2.4rem;
 	line-height: 1.5;
@@ -103,6 +111,7 @@ a {
 }
 
 .rfa-footer {
+	text-align: center;
 	font-size: 0.8rem;
 }
 

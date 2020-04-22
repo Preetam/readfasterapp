@@ -171,6 +171,15 @@ class Login extends Component {
 	}
 }
 
+class Footer extends Component {
+	render() {
+		return html`
+		<div class="rfa-footer"><a href="/legal.html">Legal</a></div>
+		`
+	}
+}
+
+
 class App extends Component {
 	constructor() {
 		super()
@@ -220,6 +229,7 @@ class App extends Component {
 			<${Register} path="/app/register" />
 			<${Login} path="/app/login" />
 		</${Router}>
+		<${Footer}/>
 		</div>
 		`;
 	}
