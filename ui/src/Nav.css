@@ -12,7 +12,11 @@
 
 .rfa-nav-app-name {
 	font-size: 20px;
-	font-weight: bold;
+	letter-spacing: -0.05em;
+}
+
+.rfa-nav-app-name em {
+	font-weight: 900;
 }
 
 .rfa-nav li + li {
