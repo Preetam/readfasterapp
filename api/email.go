@@ -36,8 +36,8 @@ p {
 </head>
 <body>
 <div style="font-family: 'Inter', -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif; font-size: 18px; width: 40rem; margin: 0 auto; max-width: 90%">
-<div style="background-color: black; color: white; text-align: center; padding: 2rem; font-size: 1.3rem; font-weight: bold;">
-<a style="text-decoration: none; color: white;" href="https://www.readfaster.app/">ReadFaster</a>
+<div style="background-color: black; color: white; text-align: center;">
+<a style="text-decoration: none; color: white;" href="https://www.readfaster.app/"><img alt="ReadFaster" src="https://www.readfaster.app/img/logo-dark.png" style="width: 200px; height: 50px; margin: 50px;"/></a>
 </div>
 
 <div style="margin: 2rem;">
