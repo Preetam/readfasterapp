@@ -92,7 +92,7 @@ class RegistrationForm extends Component {
 class LoginForm extends Component {
 	constructor() {
 		super()
-		this.state = { email: '', password: '', submitted: false, error: null, wrongCredentials: false }
+		this.state = { email: '', password: '', submitted: false, completed: false, error: null, wrongCredentials: false }
 	}
 
 	onSubmit(e) {
@@ -118,6 +118,10 @@ class LoginForm extends Component {
 				} else {
 					this.setState({ error: response.status + ": " + response.statusText })
 				}
+			} else {
+				this.setState({
+					completed: true,
+				})
 			}
 		})
 		.catch(((e) => {
@@ -147,8 +151,10 @@ class LoginForm extends Component {
 				`
 			}
 			if (this.state.password != "") {
-				window.location.href = "/app";
-				return html`<p>Logged in!</p>`
+				if (this.state.completed) {
+					window.location.href = "/app";
+				}
+				return html`<p>Logging you in!</p>`
 			}
 			return html`
 				<p>Check your email for a magical login link.</p>
