@@ -35,7 +35,7 @@ class UpdatePasswordForm extends Component {
 		this.setState({ password: e.target.value })
 	}
 
-	render() {
+	render({ userEmail }) {
 		if (this.state.submitted) {
 			if (this.state.error) {
 				return html`
@@ -48,6 +48,7 @@ class UpdatePasswordForm extends Component {
 		}
 		return html`
 			<form onSubmit=${this.onSubmit.bind(this)}>
+				<input class="rfa-input" name=email type=email value=${userEmail} disabled>Email</input>
 				<input class="rfa-input" name=password type=password placeholder="Your new password" onInput=${this.onPasswordInput.bind(this)}>Password</input>
 				<button class="rfa-button" type="submit" disabled=${this.state.submitted}>Update</button>
 			</form>
@@ -56,19 +57,19 @@ class UpdatePasswordForm extends Component {
 }
 
 class UpdatePassword extends Component {
-	render() {
+	render({ userEmail }) {
 		return html`
 			<h3>Update password</h3>
-			<${UpdatePasswordForm} />
+			<${UpdatePasswordForm} userEmail=${userEmail} />
 		`
 	}
 }
 
 class Profile extends Component {
-	render() {
+	render({ userEmail }) {
 		return html`
 			<h1>Profile</h1>
-			<${UpdatePassword} />
+			<${UpdatePassword} userEmail=${userEmail} />
 		`
 	}
 }

@@ -147,7 +147,8 @@ class LoginForm extends Component {
 				`
 			}
 			if (this.state.password != "") {
-				return route("/app/", true);
+				window.location.href = "/app";
+				return html`<p>Logged in!</p>`
 			}
 			return html`
 				<p>Check your email for a magical login link.</p>
@@ -205,11 +206,11 @@ class Footer extends Component {
 class App extends Component {
 	constructor() {
 		super()
-		this.state = { loading: true, userID: null, error: null }
+		this.state = { loading: true, userID: null, userEmail: null, error: null }
 	}
 
 	componentWillMount() {
-		fetch("/api/ping").then(((response) => {
+		fetch("/api/user").then(((response) => {
 			if (response.ok) {
 				return response.json()
 			} else {
@@ -223,7 +224,7 @@ class App extends Component {
 			}
 		}).bind(this))
 		.then(((data) => {
-			this.setState({ loading: false, userID: data["user_id"] });
+			this.setState({ loading: false, userID: data["user_id"], userEmail: data["email"] });
 		}).bind(this))
 		.catch(((e) => {
 			this.setState({ loading: false, error: "Something went wrong." })
@@ -250,7 +251,7 @@ class App extends Component {
 			<${Home} path="/app/" userID=${this.state.userID} />
 			<${Register} path="/app/register" />
 			<${Login} path="/app/login" />
-			<${Profile} path="/app/profile" />
+			<${Profile} path="/app/profile" userEmail=${this.state.userEmail} />
 		</${Router}>
 		<${Footer}/>
 		</div>

@@ -58,7 +58,7 @@ a {
 	cursor: pointer;
 }
 
-.rfa-button:disabled {
+.rfa-input:disabled, .rfa-button:disabled {
 	opacity: 0.3;
 }
 

@@ -3,7 +3,6 @@ package api
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"net/url"
@@ -55,7 +54,7 @@ func Run(opts *Options) error {
 	// API
 	r.Methods("POST").Path("/api/register").HandlerFunc(api.HandleAPIRegister)
 	r.Methods("POST").Path("/api/login").HandlerFunc(api.HandleAPILogin)
-	r.Methods("GET").Path("/api/ping").HandlerFunc(api.WithAuth(api.HandleAPIPing))
+	r.Methods("GET").Path("/api/user").HandlerFunc(api.WithAuth(api.HandleAPIGetUser))
 	r.Methods("PUT").Path("/api/password").HandlerFunc(api.WithAuth((api.HandleAPIPutPassword)))
 	r.Methods("GET").Path("/api/reading_sessions").HandlerFunc(api.WithAuth(api.HandleAPIGetReadingSessions))
 	r.Methods("POST").Path("/api/reading_sessions").HandlerFunc(api.WithAuth(api.HandleAPIPostReadingSessions))
@@ -154,7 +153,7 @@ func (api *API) HandleLaunchSubscribe(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (api *API) HandleAPIPing(w http.ResponseWriter, r *http.Request) {
+func (api *API) HandleAPIGetUser(w http.ResponseWriter, r *http.Request) {
 	userIDVal := r.Context().Value(userIDContextKey)
 	if userIDVal == nil {
 		log.Println("missing user ID in context")
@@ -162,6 +161,17 @@ func (api *API) HandleAPIPing(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	userID := userIDVal.(string)
+
+	email := ""
+	err := api.db.QueryRow("SELECT email FROM users WHERE id = $1", userID).Scan(&email)
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 	w.Header().Add("content-type", "application/json")
-	w.Write([]byte(fmt.Sprintf(`{"user_id": "%s"}`, userID)))
+	json.NewEncoder(w).Encode(map[string]string{
+		"user_id": userID,
+		"email":   email,
+	})
 }
