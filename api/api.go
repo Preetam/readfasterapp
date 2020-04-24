@@ -56,6 +56,7 @@ func Run(opts *Options) error {
 	r.Methods("POST").Path("/api/register").HandlerFunc(api.HandleAPIRegister)
 	r.Methods("POST").Path("/api/login").HandlerFunc(api.HandleAPILogin)
 	r.Methods("GET").Path("/api/ping").HandlerFunc(api.WithAuth(api.HandleAPIPing))
+	r.Methods("PUT").Path("/api/password").HandlerFunc(api.WithAuth((api.HandleAPIPutPassword)))
 	r.Methods("GET").Path("/api/reading_sessions").HandlerFunc(api.WithAuth(api.HandleAPIGetReadingSessions))
 	r.Methods("POST").Path("/api/reading_sessions").HandlerFunc(api.WithAuth(api.HandleAPIPostReadingSessions))
 	r.Methods("DELETE").Path("/api/reading_sessions/{reading_session_timestamp}").HandlerFunc(api.WithAuth(api.HandleAPIDeleteReadingSessions))

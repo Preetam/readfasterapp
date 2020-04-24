@@ -1,10 +1,11 @@
 import { Component } from 'preact';
 import { html } from 'htm/preact';
-import Router from 'preact-router';
+import { Router, route} from 'preact-router';
 import './App.css'
 import Nav from './Nav.js'
 import CheckLogin from './CheckLogin';
 import ReadingSessions from './ReadingSessions';
+import Profile from './Profile';
 
 class Home extends Component {
 	render({ userID }) {
@@ -91,7 +92,7 @@ class RegistrationForm extends Component {
 class LoginForm extends Component {
 	constructor() {
 		super()
-		this.state = { email: '', submitted: false, error: null }
+		this.state = { email: '', password: '', submitted: false, error: null, wrongCredentials: false }
 	}
 
 	onSubmit(e) {
@@ -104,11 +105,19 @@ class LoginForm extends Component {
 			},
 			body: JSON.stringify({
 				email: this.state.email,
+				password: this.state.password,
 				verify: document.getElementById('login-verify').value,
 			}),
 		}).then((response) => {
 			if (!response.ok) {
-				this.setState({ error: response.status + ": " + response.statusText })
+				if (response.status == 401) {
+					this.setState({
+						wrongCredentials: true,
+						error: "Incorrect email address or password.",
+					})
+				} else {
+					this.setState({ error: response.status + ": " + response.statusText })
+				}
 			}
 		})
 		.catch(((e) => {
@@ -122,12 +131,23 @@ class LoginForm extends Component {
 		this.setState({ email: e.target.value })
 	}
 
+	onPasswordInput(e) {
+		this.setState({ password: e.target.value })
+	}
+
 	render() {
 		if (this.state.submitted) {
 			if (this.state.error) {
 				return html`
 					<p>Something went wrong! ${this.state.error}</p>
+					${this.state.wrongCredentials ? html`
+						<p>Check your credentials and try again.
+						If you forgot your password, log in with just your email address.</p>
+					` : ''}
 				`
+			}
+			if (this.state.password != "") {
+				return route("/app/", true);
 			}
 			return html`
 				<p>Check your email for a magical login link.</p>
@@ -136,10 +156,12 @@ class LoginForm extends Component {
 		return html`
 			<h3>Login</h3>
 			<form onSubmit=${this.onSubmit.bind(this)}>
-				<input class='rfa-input' type=email name=email placeholder='Your email address' onInput=${this.onEmailInput.bind(this)}>Email</input>
+			<input class='rfa-input' type=email name=email placeholder='Your email address' onInput=${this.onEmailInput.bind(this)}>Email</input>
+			<input class='rfa-input' type=password name=password placeholder='Your password' onInput=${this.onPasswordInput.bind(this)}>Password</input>
 				<input type=hidden name=verify id="login-verify"></input>
 				<button class='rfa-button' type="submit" disabled=${this.state.submitted}>Login</button>
 			</form>
+			<p>Don’t enter a password to get a magical login link in your email.</p>
 			<script id="login-grecaptcha" src="https://www.google.com/recaptcha/api.js?render=6Le3CekUAAAAAJx8XX3nmtv5JmtKuRfFlD6MADO_"></script>
 			<script>
 				var script = document.querySelector('#login-grecaptcha');
@@ -228,6 +250,7 @@ class App extends Component {
 			<${Home} path="/app/" userID=${this.state.userID} />
 			<${Register} path="/app/register" />
 			<${Login} path="/app/login" />
+			<${Profile} path="/app/profile" />
 		</${Router}>
 		<${Footer}/>
 		</div>

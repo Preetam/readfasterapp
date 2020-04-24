@@ -34,6 +34,7 @@ class Nav extends Component {
 			<ul class="rfa-nav">
 				<li><a href="/app/" class="rfa-nav-app-name">Read<em>Faster</em></a></li>
 				<li><a href="/app/">Home</a></li>
+				<li><a href="/app/profile">Profile</a></li>
 				<li><a href="/app/logout">Logout</a></li>
 			</ul>
 			<${Hamburger}/>

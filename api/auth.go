@@ -121,8 +121,9 @@ https://www.readfaster.app/app/auth?email=%s&ts=%s&verify=%x
 
 func (api *API) HandleAPILogin(w http.ResponseWriter, r *http.Request) {
 	requestBody := struct {
-		Email  string `json:"email"`
-		Verify string `json:"verify"`
+		Email    string `json:"email"`
+		Password string `json:"password"`
+		Verify   string `json:"verify"`
 	}{}
 	err := json.NewDecoder(r.Body).Decode(&requestBody)
 	if err != nil {
@@ -130,6 +131,7 @@ func (api *API) HandleAPILogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	email := requestBody.Email
+	password := requestBody.Password
 	verify := requestBody.Verify
 
 	if !api.devMode {
@@ -184,6 +186,43 @@ func (api *API) HandleAPILogin(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Validate user.
+
+	if password != "" {
+		// Password-based auth
+		userID := ""
+		err = api.db.QueryRow("SELECT id FROM users WHERE email = $1 AND password = (crypt($2, password))", email, password).Scan(&userID)
+		if err != nil {
+			if err == sql.ErrNoRows || err.Error() == "pq: invalid salt" {
+				w.WriteHeader(http.StatusUnauthorized)
+				return
+			}
+			log.Println(err)
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+		sessionID := ""
+		err = api.db.QueryRow(`INSERT INTO auth_sessions (id, user_id, expires_at)
+							VALUES (encode(gen_random_bytes(16), 'hex'),
+									(SELECT id FROM users WHERE email = $1),
+									now()+interval '7 day') RETURNING id`,
+			email).Scan(&sessionID)
+		if err != nil {
+			log.Println(err)
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(`Something went wrong.`))
+			return
+		}
+		http.SetCookie(w, &http.Cookie{
+			Name:     "rfa",
+			Value:    sessionID,
+			Path:     "/",
+			Expires:  time.Now().Add(7 * 24 * time.Hour),
+			Secure:   !api.devMode,
+			HttpOnly: true,
+		})
+		return
+	}
 
 	userID := ""
 	err = api.db.QueryRow("SELECT id FROM users WHERE email = $1", email).Scan(&userID)
@@ -303,6 +342,35 @@ func (api *API) HandleLogout(w http.ResponseWriter, r *http.Request) {
 		HttpOnly: true,
 	})
 	w.Write([]byte(`Logged out.`))
+}
+
+func (api *API) HandleAPIPutPassword(w http.ResponseWriter, r *http.Request) {
+	userIDVal := r.Context().Value(userIDContextKey)
+	if userIDVal == nil {
+		log.Println("missing user ID in context")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	userID := userIDVal.(string)
+
+	requestBody := struct {
+		Password string `json:"password"`
+	}{}
+	err := json.NewDecoder(r.Body).Decode(&requestBody)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	password := requestBody.Password
+
+	_, err = api.db.Exec("UPDATE users SET password = crypt($1, gen_salt('bf')) WHERE id = $2", password, userID)
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusAccepted)
 }
 
 // WithAuth wraps a handler with authentication checks.
