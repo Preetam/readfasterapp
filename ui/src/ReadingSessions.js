@@ -212,7 +212,7 @@ class ReadingSessionsChart extends Component {
 			.key(d => new Date(d.timestamp*1000).toLocaleDateString())
 			.rollup(v => d3.sum(v, d => d.duration))
 			.object(sessions)
-		const margin = {top: 10, right: 4, bottom: 50, left: 4};
+		const margin = {top: 10, right: 10, bottom: 50, left: 10};
 		const width = 325;
 		const height = 120;
 
@@ -240,8 +240,8 @@ class ReadingSessionsChart extends Component {
 			<g
 				transform="translate(0,${height - margin.bottom})"
 				ref=${g => {
-					d3.select(g).call(d3.axisBottom(x).ticks(3).tickFormat(d3.timeFormat("%Y-%m-%d")))
-					d3.select(g).selectAll("text").attr("transform", "translate(-25, 20)rotate(-45)").attr("font-size", "10px")
+					d3.select(g).call(d3.axisBottom(x).ticks(3).tickFormat(d3.timeFormat("%m/%d")))
+					d3.select(g).selectAll("text").attr("transform", "translate(-13, 20)rotate(-90)").attr("font-size", "10px")
 				}}
 				class="rfa-chart-axis" />
 			${ data.map(d => (
