@@ -53,3 +53,18 @@
 .rfa-chart-bar {
 	fill: var(--main-fg-color);
 }
+
+.rfa-guidance {
+	margin: 2rem 0;
+}
+
+.rfa-guidance h3 {
+	font-size: 2rem;
+	line-height: 2;
+	padding: 0;
+	margin: 0;
+}
+
+.rfa-guidance .rfa-guidance-line {
+	line-height: 2;
+}

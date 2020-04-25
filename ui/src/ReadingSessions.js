@@ -208,12 +208,11 @@ class ReadingSessionsTableRow extends Component {
 
 class ReadingSessionsChart extends Component {
 	render({ sessions }) {
-
 		const totalsByDay = d3.nest()
 			.key(d => new Date(d.timestamp*1000).toLocaleDateString())
 			.rollup(v => d3.sum(v, d => d.duration))
 			.object(sessions)
-		const margin = {top: 10, right: 30, bottom: 30, left: 30};
+		const margin = {top: 10, right: 40, bottom: 30, left: 40};
 		const width = 640;
 		const height = 160;
 
@@ -240,7 +239,7 @@ class ReadingSessionsChart extends Component {
 		<svg preserveAspectRatio="xMinYMax meet" viewBox="0 0 640 160" style="display: inline-block; width: 100%;">
 			<g
 				transform="translate(0,${height - margin.bottom})"
-				ref=${g => d3.select(g).call(d3.axisBottom(x).ticks(3))}
+				ref=${g => d3.select(g).call(d3.axisBottom(x).ticks(3).tickFormat(d3.timeFormat("%Y-%m-%d")))}
 				class="rfa-chart-axis" />
 			${ data.map(d => (
 				html`<rect class="rfa-chart-bar" x=${x(d.date)-1} y=${y(d.duration)} width=3 height=${height-y(d.duration)-margin.bottom} />`
@@ -248,6 +247,48 @@ class ReadingSessionsChart extends Component {
 		  </svg>
 		  </div>
 		`;
+	}
+}
+
+class ReadingSessionsGuidance extends Component {
+	render({ sessions }) {
+		const sessionsToday = sessions.filter(s => {
+			if ((new Date(s.timestamp*1000)).toLocaleDateString() == (new Date()).toLocaleDateString()) {
+				return true;
+			}
+		})
+
+		const sessionsLast7Days = sessions.filter(s => {
+			const timestamp1WeekAgo = (new Date()).getTime()/1000-(7*86400);
+			if (s.timestamp >= timestamp1WeekAgo) {
+				return true;
+			}
+		})
+
+		let guidances = [];
+
+		if (sessionsToday.length == 0) {
+			guidances.push("You haven't read today. Try to get to 10 minutes!");
+		} else {
+			let avgOver7Days = (sessionsLast7Days.map(s => s.duration).reduce((total, d) => (total+d)))/7;
+			const totalReadingSecondsToday = sessionsToday.map(s => s.duration).reduce((total, d) => (total+d));
+			if (totalReadingSecondsToday/60 < 10) {
+				guidances.push("Try to get to at least 10 minutes today.");
+			}
+			if (totalReadingSecondsToday < avgOver7Days) {
+				guidances.push("Your total for today is under your weekly average. Try to beat it!");
+			}
+		}
+
+		if (sessions.filter(s => s.duration < 120).length > 0) {
+			guidances.push("Try to get at least 2 minutes every session!");
+		}
+
+		return html`<div class="rfa-guidance">
+			${guidances.map(g => (
+				html`<div class="rfa-guidance-line">💡 ${g}</div>`
+			))}
+		</div>`
 	}
 }
 
@@ -313,7 +354,6 @@ class ReadingSessionsSummary extends Component {
 		return html`
 			<div class="rfa-summary-section">${sessionsTodayHTML}</div>
 			<div class="rfa-summary-section">${oneWeekAvgHTML}</div>
-			<${ReadingSessionsChart} sessions=${sessions} />
 		`
 	}
 }
@@ -363,6 +403,8 @@ class ReadingSessions extends Component {
 			<div class="rfa-summary">
 				<${ReadingSessionsSummary} sessions=${this.state.sessions} />
 			</div>
+			<${ReadingSessionsGuidance} sessions=${this.state.sessions} />
+			<${ReadingSessionsChart} sessions=${this.state.sessions} />
 			<div>
 				<h4>Record a session</h4>
 				<p>Start recording a session.</p>
