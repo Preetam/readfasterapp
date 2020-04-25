@@ -16,7 +16,7 @@ class AddReadingSession extends Component {
 	onSubmit(refresh) {
 		return (function(e) {
 			e.preventDefault();
-			fetch("/api/reading_sessions", {
+			fetch("/api/reading/sessions", {
 				method: "POST",
 				headers: {
 					'Content-Type': 'application/json',
@@ -95,7 +95,7 @@ class RecordReadingSession extends Component {
 		const totalSeconds = Math.floor(totalDuration/1000);
 		return (function(e) {
 			e.preventDefault();
-			fetch("/api/reading_sessions", {
+			fetch("/api/reading/sessions", {
 				method: "POST",
 				headers: {
 					'Content-Type': 'application/json',
@@ -177,7 +177,7 @@ class ReadingSessionsTableRow extends Component {
 		if (!confirm("Are you sure you want to delete this session?")) {
 			return;
 		}
-		fetch("/api/reading_sessions/" + ts, {
+		fetch("/api/reading/sessions/" + ts, {
 			method: "DELETE"
 		}).then(() => {
 			refresh()
@@ -368,7 +368,7 @@ class ReadingSessions extends Component {
 	}
 
 	refreshList() {
-		fetch("/api/reading_sessions").then(((response) => {
+		fetch("/api/reading/sessions").then(((response) => {
 			if (response.ok) {
 				return response.json()
 			} else {
