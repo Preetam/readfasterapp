@@ -1,5 +1,6 @@
 import { Component } from 'preact';
 import { html } from 'htm/preact';
+import * as d3 from "d3";
 import './ReadingSessions.css';
 
 class AddReadingSession extends Component {
@@ -68,7 +69,7 @@ class RecordReadingSession extends Component {
 		window.localStorage.setItem("timer_state", JSON.stringify(newState));
 	}
 
-	stop() {
+	pause() {
 		const newState = {
 			duration: this.state.duration + (this.state.now - this.state.start),
 			start: null,
@@ -148,7 +149,7 @@ class RecordReadingSession extends Component {
 		return html `
 			<div class="rfa-timer">Duration: <strong>${totalMinutes < 10 ? '0'+totalMinutes : totalMinutes}:${seconds < 10 ? '0'+seconds : seconds}</strong></div>
 			<button class='rfa-button' disabled=${state.active} onclick=${this.start.bind(this)}>Start</button>
-			<button class='rfa-button' disabled=${!state.active} onclick=${this.stop.bind(this)}>Stop</button>
+			<button class='rfa-button' disabled=${!state.active} onclick=${this.pause.bind(this)}>Pause</button>
 			<button class='rfa-button' onclick=${this.reset.bind(this)}>Reset</button>
 			<button class='rfa-button' disabled=${totalSeconds < 5} onclick=${this.submit(refresh)}>Submit</button>
 		`;
@@ -205,6 +206,51 @@ class ReadingSessionsTableRow extends Component {
 	}
 }
 
+class ReadingSessionsChart extends Component {
+	render({ sessions }) {
+
+		const totalsByDay = d3.nest()
+			.key(d => new Date(d.timestamp*1000).toLocaleDateString())
+			.rollup(v => d3.sum(v, d => d.duration))
+			.object(sessions)
+		const margin = {top: 10, right: 30, bottom: 30, left: 30};
+		const width = 640;
+		const height = 160;
+
+		console.log(totalsByDay)
+
+		let data = [];
+		for (let [key, value] of Object.entries(totalsByDay)) {
+			data.push({
+				date: new Date(key),
+				duration: value/60,
+			})
+		}
+
+		const x = d3.scaleTime()
+			.domain([d3.min(data, d => d.date), d3.max(data, d => d.date)])
+			.range([margin.left, width - margin.right]);
+
+		const y = d3.scaleLinear()
+			.domain([0, d3.max(data, d => d.duration)])
+			.range([height - margin.bottom, margin.top]);
+
+		return html`
+		<div style="width: 100%;">
+		<svg preserveAspectRatio="xMinYMax meet" viewBox="0 0 640 160" style="display: inline-block; width: 100%;">
+			<g
+				transform="translate(0,${height - margin.bottom})"
+				ref=${g => d3.select(g).call(d3.axisBottom(x).ticks(3))}
+				class="rfa-chart-axis" />
+			${ data.map(d => (
+				html`<rect x=${x(d.date)-1} y=${y(d.duration)} width=3 height=${height-y(d.duration)-margin.bottom} />`
+			)) }
+		  </svg>
+		  </div>
+		`;
+	}
+}
+
 class ReadingSessionsSummary extends Component {
 	render({ sessions }) {
 		const sessionsToday = sessions.filter(s => {
@@ -245,7 +291,7 @@ class ReadingSessionsSummary extends Component {
 		let sessionsTodayHTML;
 		if (sessionsToday.length == 0) {
 			sessionsTodayHTML = html`
-			<div class="rfa-summary-heading">Nothing recorded for today.</div>
+			<div class="rfa-summary-heading">Nothing recorded for today</div>
 			<div class="rfa-summary-time">Go read!</div>
 			`
 		} else {
@@ -267,6 +313,7 @@ class ReadingSessionsSummary extends Component {
 		return html`
 			<div class="rfa-summary-section">${sessionsTodayHTML}</div>
 			<div class="rfa-summary-section">${oneWeekAvgHTML}</div>
+			<${ReadingSessionsChart} sessions=${sessions} />
 		`
 	}
 }
