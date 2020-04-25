@@ -243,7 +243,7 @@ class ReadingSessionsChart extends Component {
 				ref=${g => d3.select(g).call(d3.axisBottom(x).ticks(3))}
 				class="rfa-chart-axis" />
 			${ data.map(d => (
-				html`<rect x=${x(d.date)-1} y=${y(d.duration)} width=3 height=${height-y(d.duration)-margin.bottom} />`
+				html`<rect class="rfa-chart-bar" x=${x(d.date)-1} y=${y(d.duration)} width=3 height=${height-y(d.duration)-margin.bottom} />`
 			)) }
 		  </svg>
 		  </div>
