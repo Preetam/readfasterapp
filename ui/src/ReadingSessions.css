@@ -26,13 +26,6 @@
 	flex: 100%;
 }
 
-@media screen and (min-width: 500px) {
-	.rfa-summary-section {
-		flex: 50%;
-	}
-}
-
-
 .rfa-summary-heading {
 	font-size: 0.75rem;
 	opacity: 0.9;
@@ -45,12 +38,12 @@
 	margin-top: 1rem;
 }
 
-.rfa-chart-axis {
-	opacity: 0.5;
-}
-
 .rfa-chart-bar {
 	fill: var(--main-fg-color);
+}
+
+.rfa-chart-axis text {
+	font-size: 12px;
 }
 
 .rfa-guidance {
@@ -66,4 +59,14 @@
 
 .rfa-guidance .rfa-guidance-line {
 	line-height: 2;
+}
+
+@media screen and (min-width: 500px) {
+	.rfa-summary-section {
+		flex: 50%;
+	}
+
+	.rfa-chart-axis text {
+		font-size: 0.5rem;
+	}
 }

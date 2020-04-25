@@ -212,11 +212,9 @@ class ReadingSessionsChart extends Component {
 			.key(d => new Date(d.timestamp*1000).toLocaleDateString())
 			.rollup(v => d3.sum(v, d => d.duration))
 			.object(sessions)
-		const margin = {top: 10, right: 10, bottom: 50, left: 10};
+		const margin = {top: 10, right: 20, bottom: 50, left: 60};
 		const width = 325;
 		const height = 120;
-
-		console.log(totalsByDay)
 
 		let data = [];
 		for (let [key, value] of Object.entries(totalsByDay)) {
@@ -231,21 +229,26 @@ class ReadingSessionsChart extends Component {
 			.range([margin.left, width - margin.right]);
 
 		const y = d3.scaleLinear()
-			.domain([0, d3.max(data, d => d.duration)])
+			.domain([0, d3.max(data, d => d.duration)*1.05])
 			.range([height - margin.bottom, margin.top]);
 
 		return html`
-		<div style="max-width: 480px; margin: 0 auto;">
+		<div>
 		<svg viewBox="0 0 ${width} ${height}" style="display: inline-block; width: 100%;">
 			<g
 				transform="translate(0,${height - margin.bottom})"
 				ref=${g => {
 					d3.select(g).call(d3.axisBottom(x).ticks(3).tickFormat(d3.timeFormat("%m/%d")))
-					d3.select(g).selectAll("text").attr("transform", "translate(-13, 20)rotate(-90)").attr("font-size", "10px")
+				}}
+				class="rfa-chart-axis" />
+			<g
+				transform="translate(55, 0)"
+				ref=${g => {
+					d3.select(g).call(d3.axisLeft(y).ticks(3).tickFormat(d => d + " min"))
 				}}
 				class="rfa-chart-axis" />
 			${ data.map(d => (
-				html`<rect class="rfa-chart-bar" x=${x(d.date)-1} y=${y(d.duration)} width=3 height=${height-y(d.duration)-margin.bottom} />`
+				html`<rect class="rfa-chart-bar" x=${x(d.date)} y=${y(d.duration)} width=1 height=${height-y(d.duration)-margin.bottom} />`
 			)) }
 		  </svg>
 		  </div>
@@ -283,8 +286,13 @@ class ReadingSessionsGuidance extends Component {
 			}
 		}
 
-		if (sessions.filter(s => s.duration < 120).length > 0) {
-			guidances.push("Try to get at least 2 minutes every session!");
+		if (sessionsLast7Days.length > 0) {
+			const totalOver7Days = (sessionsLast7Days.map(s => s.duration).reduce((total, d) => (total+d)));
+			const avgSessionDuration = totalOver7Days/sessionsLast7Days.length;
+			console.log(avgSessionDuration)
+			if (avgSessionDuration < 120) {
+				guidances.push("Try to get at least 2 minutes every session!");
+			}
 		}
 
 		return html`<div class="rfa-guidance">
