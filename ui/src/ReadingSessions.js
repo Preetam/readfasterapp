@@ -104,7 +104,7 @@ class RecordReadingSession extends Component {
 			}).then(() => {
 				refresh()
 			})
-			this.setState({ duration: 0, start: null, now: null, })
+			this.setState({ duration: 0, start: null, now: null, active: false, })
 			window.localStorage.removeItem("timer_state");
 			clearInterval(this.timer);
 		}.bind(this))
@@ -212,9 +212,9 @@ class ReadingSessionsChart extends Component {
 			.key(d => new Date(d.timestamp*1000).toLocaleDateString())
 			.rollup(v => d3.sum(v, d => d.duration))
 			.object(sessions)
-		const margin = {top: 10, right: 40, bottom: 30, left: 40};
-		const width = 640;
-		const height = 160;
+		const margin = {top: 10, right: 4, bottom: 50, left: 4};
+		const width = 325;
+		const height = 120;
 
 		console.log(totalsByDay)
 
@@ -235,11 +235,14 @@ class ReadingSessionsChart extends Component {
 			.range([height - margin.bottom, margin.top]);
 
 		return html`
-		<div style="width: 100%;">
-		<svg preserveAspectRatio="xMinYMax meet" viewBox="0 0 640 160" style="display: inline-block; width: 100%;">
+		<div style="max-width: 480px; margin: 0 auto;">
+		<svg viewBox="0 0 ${width} ${height}" style="display: inline-block; width: 100%;">
 			<g
 				transform="translate(0,${height - margin.bottom})"
-				ref=${g => d3.select(g).call(d3.axisBottom(x).ticks(3).tickFormat(d3.timeFormat("%Y-%m-%d")))}
+				ref=${g => {
+					d3.select(g).call(d3.axisBottom(x).ticks(3).tickFormat(d3.timeFormat("%Y-%m-%d")))
+					d3.select(g).selectAll("text").attr("transform", "translate(-25, 20)rotate(-45)").attr("font-size", "10px")
+				}}
 				class="rfa-chart-axis" />
 			${ data.map(d => (
 				html`<rect class="rfa-chart-bar" x=${x(d.date)-1} y=${y(d.duration)} width=3 height=${height-y(d.duration)-margin.bottom} />`
