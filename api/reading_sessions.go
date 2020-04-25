@@ -23,7 +23,7 @@ func (api *API) HandleAPIGetReadingSessions(w http.ResponseWriter, r *http.Reque
 	}
 	userID := userIDVal.(string)
 
-	rows, err := api.db.Query("SELECT timestamp, duration FROM reading_sessions WHERE user_id = $1", userID)
+	rows, err := api.db.Query("SELECT timestamp, duration FROM reading_sessions WHERE user_id = $1 AND timestamp > extract(epoch from now())-(14*86400) /* two weeks */", userID)
 	if err != nil {
 		log.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
