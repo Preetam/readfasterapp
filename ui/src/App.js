@@ -69,11 +69,15 @@ class RegistrationForm extends Component {
 		}
 		return html`
 			<h3>Register</h3>
+			<p>Registration is simple. All we need is your email address. You’ll get an email with a special link to verify your account.
+			You can set a password in your profile page afterwards.</p>
 			<form onSubmit=${this.onSubmit.bind(this)}>
 				<input class="rfa-input" name=email type=email placeholder="Your email address" onInput=${this.onEmailInput.bind(this)}>Email</input>
 				<input type=hidden name=verify id="register-verify"></input>
 				<button class="rfa-button" type="submit" disabled=${this.state.submitted}>Register</button>
 			</form>
+			<p class="rfa-recaptcha-terms">This form is protected by reCAPTCHA and is subject to the Google <a href="//www.google.com/intl/en/policies/privacy/">Privacy Policy</a> and <a href="//www.google.com/intl/en/policies/terms/">Terms of Service</a>.</p>
+			<p>By registering you agree to the terms and privacy policy described <a href="/terms.html">here</a>.</p>
 			<script id="register-grecaptcha" src="https://www.google.com/recaptcha/api.js?render=6Le3CekUAAAAAJx8XX3nmtv5JmtKuRfFlD6MADO_"></script>
 			<script>
 				var script = document.querySelector('#register-grecaptcha');
@@ -168,7 +172,8 @@ class LoginForm extends Component {
 				<input type=hidden name=verify id="login-verify"></input>
 				<button class='rfa-button' type="submit" disabled=${this.state.submitted}>Login</button>
 			</form>
-			<p>Don’t enter a password to get a magical login link in your email.</p>
+			<p class="rfa-recaptcha-terms">This form is protected by reCAPTCHA and is subject to the Google <a href="//www.google.com/intl/en/policies/privacy/">Privacy Policy</a> and <a href="//www.google.com/intl/en/policies/terms/">Terms of Service</a>.</p>
+			<p>Forgot your password? Leave it blank to get a magical login link in your email.</p>
 			<script id="login-grecaptcha" src="https://www.google.com/recaptcha/api.js?render=6Le3CekUAAAAAJx8XX3nmtv5JmtKuRfFlD6MADO_"></script>
 			<script>
 				var script = document.querySelector('#login-grecaptcha');
@@ -203,7 +208,9 @@ class Login extends Component {
 class Footer extends Component {
 	render() {
 		return html`
-		<div class="rfa-footer"><a href="/legal.html">Legal</a></div>
+		<div class="rfa-footer">
+			<p>Copyright © 2020 ReadFaster.app. <a href="/legal.html">Legal</a></p>
+		</div>
 		`
 	}
 }

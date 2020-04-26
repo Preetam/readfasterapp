@@ -212,9 +212,9 @@ class ReadingSessionsChart extends Component {
 			.key(d => new Date(d.timestamp*1000).toLocaleDateString())
 			.rollup(v => d3.sum(v, d => d.duration))
 			.object(sessions)
-		const margin = {top: 10, right: 20, bottom: 50, left: 60};
-		const width = 325;
-		const height = 120;
+		const margin = {top: 10, right: 20, bottom: 50, left: 65};
+		const width = 500;
+		const height = 160;
 
 		let data = [];
 		for (let [key, value] of Object.entries(totalsByDay)) {
@@ -242,7 +242,7 @@ class ReadingSessionsChart extends Component {
 				}}
 				class="rfa-chart-axis" />
 			<g
-				transform="translate(55, 0)"
+				transform="translate(${margin.left}, 0)"
 				ref=${g => {
 					d3.select(g).call(d3.axisLeft(y).ticks(3).tickFormat(d => d + " min"))
 				}}
