@@ -48,12 +48,11 @@ hr {
 	font-weight: 900;
 }
 
-
 .rfa-landing-header {
 	font-size: 2.4rem;
 	line-height: 1.5;
 	min-height: 3m;
-	padding: 8rem 1rem 4rem 1rem;
+	padding: 8rem 2rem 8rem 2rem;
 	text-align: center;
 }
 
@@ -80,19 +79,33 @@ hr {
 	width: 60rem;
 	max-width: 80%;
 	margin: 0 auto;
+	display: flex;
+	flex-wrap: wrap;
 }
 
 .rfa-landing-section {
-	margin-bottom: 12rem;
+	padding: 1rem;
+	margin-bottom: 4rem;
+	flex: 100%;
+}
+
+@media screen and (min-width: 700px) {
+	.rfa-landing-section {
+		flex: 20%;
+	}
+}
+
+#coming-soon {
+	flex: 100%;
 }
 
 .rfa-landing-section h2 {
-	font-size: 2rem;
+	font-size: 1.5rem;
 }
 
 .rfa-landing-section p {
-	font-size: 1.3rem;
-	line-height: 1.7;
+	font-size: 1rem;
+	line-height: 1.5;
 }
 
 .rfa-subscribe-form {
@@ -132,6 +145,7 @@ hr {
 .rfa-footer {
 	text-align: center;
 	font-size: 0.8rem;
+	flex: 100%;
 }
 
 .grecaptcha-badge{display:none}
