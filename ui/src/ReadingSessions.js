@@ -214,18 +214,18 @@ class ReadingSessionsChart extends Component {
 			.object(sessions)
 		const margin = {top: 10, right: 20, bottom: 50, left: 65};
 		const width = 500;
-		const height = 160;
+		const height = 120;
 
 		let data = [];
 		for (let [key, value] of Object.entries(totalsByDay)) {
 			data.push({
-				date: new Date(key),
+				date: new Date(key).getTime(),
 				duration: value/60,
 			})
 		}
 
 		const x = d3.scaleTime()
-			.domain([d3.min(data, d => d.date), d3.max(data, d => d.date)])
+			.domain([d3.min(data, d => d.date)-86400000/2, d3.max(data, d => d.date)+86400000/2])
 			.range([margin.left, width - margin.right]);
 
 		const y = d3.scaleLinear()
@@ -248,7 +248,7 @@ class ReadingSessionsChart extends Component {
 				}}
 				class="rfa-chart-axis" />
 			${ data.map(d => (
-				html`<rect class="rfa-chart-bar" x=${x(d.date)} y=${y(d.duration)} width=1 height=${height-y(d.duration)-margin.bottom} />`
+				html`<rect class="rfa-chart-bar" x=${x(d.date)-2} y=${y(d.duration)} width=5 height=${height-y(d.duration)-margin.bottom} />`
 			)) }
 		  </svg>
 		  </div>
@@ -289,7 +289,6 @@ class ReadingSessionsGuidance extends Component {
 		if (sessionsLast7Days.length > 0) {
 			const totalOver7Days = (sessionsLast7Days.map(s => s.duration).reduce((total, d) => (total+d)));
 			const avgSessionDuration = totalOver7Days/sessionsLast7Days.length;
-			console.log(avgSessionDuration)
 			if (avgSessionDuration < 120) {
 				guidances.push("Try to get at least 2 minutes every session!");
 			}
