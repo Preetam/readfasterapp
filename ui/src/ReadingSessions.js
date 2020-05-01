@@ -414,7 +414,9 @@ class ReadingSessions extends Component {
 				<${ReadingSessionsSummary} sessions=${this.state.sessions} />
 			</div>
 			<${ReadingSessionsGuidance} sessions=${this.state.sessions} />
-			<${ReadingSessionsChart} sessions=${this.state.sessions} />
+			${ this.state.sessions.length > 0 ? (
+				html`<${ReadingSessionsChart} sessions=${this.state.sessions} />`
+			) : ""}
 			<div>
 				<h4>Record a session</h4>
 				<p>Start recording a session.</p>
