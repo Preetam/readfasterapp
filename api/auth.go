@@ -247,8 +247,7 @@ Cheers!`, url.QueryEscape(email), ts, sha512.Sum512_256([]byte(api.recaptchaSecr
 
 	htmlEmailContents := fmt.Sprintf(`<p>Click on the following link to magically log in:
 
-	<a style="font-weight: bold;" href="https://www.readfaster.app/app/auth?email=%s&ts=%s&verify=%x">Log in</a></p>
-	`,
+	<a style="font-weight: bold;" href="https://www.readfaster.app/app/auth?email=%s&ts=%s&verify=%x">Log in</a></p>`,
 		url.QueryEscape(email), ts, sha512.Sum512_256([]byte(api.recaptchaSecret+ts+email)))
 
 	err = api.sendMail(email, "ReadFaster Login Link", emailContents, htmlEmailContents)

@@ -1,5 +1,6 @@
 import { Component } from 'preact';
 import { html } from 'htm/preact';
+import CheckLogin from './CheckLogin';
 
 
 class UpdatePasswordForm extends Component {
@@ -67,6 +68,11 @@ class UpdatePassword extends Component {
 
 class Profile extends Component {
 	render({ userEmail }) {
+		if (!userEmail) {
+			return html`
+				<${CheckLogin} />
+				`
+		}
 		return html`
 			<h1>Profile</h1>
 			<${UpdatePassword} userEmail=${userEmail} />

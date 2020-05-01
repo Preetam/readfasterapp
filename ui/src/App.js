@@ -6,6 +6,7 @@ import Nav from './Nav.js'
 import CheckLogin from './CheckLogin';
 import ReadingSessions from './ReadingSessions';
 import Profile from './Profile';
+import Help from './Help';
 
 class Home extends Component {
 	render({ userID }) {
@@ -265,6 +266,7 @@ class App extends Component {
 			<${Register} path="/app/register" />
 			<${Login} path="/app/login" />
 			<${Profile} path="/app/profile" userEmail=${this.state.userEmail} />
+			<${Help} path="/app/help" />
 		</${Router}>
 		<${Footer}/>
 		</div>

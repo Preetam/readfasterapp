@@ -25,6 +25,7 @@ class Nav extends Component {
 				<li><a href="/app/">Home</a></li>
 				<li><a href="/app/login">Login</a></li>
 				<li><a href="/app/register">Register</a></li>
+				<li><a href="/app/help">Help</a></li>
 			</ul>
 			<${Hamburger}/>
 			<div class="rfa-nav-separator" />
@@ -35,6 +36,7 @@ class Nav extends Component {
 				<li><a href="/app/" class="rfa-nav-app-name">Read<em>Faster</em></a></li>
 				<li><a href="/app/">Home</a></li>
 				<li><a href="/app/profile">Profile</a></li>
+				<li><a href="/app/help">Help</a></li>
 				<li><a href="/app/logout">Logout</a></li>
 			</ul>
 			<${Hamburger}/>
