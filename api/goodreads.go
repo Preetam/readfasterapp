@@ -81,7 +81,7 @@ func (api *API) HandleGoodreadsAuth(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	callbackURL := "https://" + r.Host + "/goodreads/callback"
+	callbackURL := "https://www.readfaster.app/goodreads/callback"
 	if api.devMode {
 		callbackURL = "http://" + r.Host + "/goodreads/callback"
 	}
