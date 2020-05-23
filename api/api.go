@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/badoux/checkmail"
+	"github.com/gomodule/oauth1/oauth"
 	"github.com/gorilla/mux"
 	_ "github.com/lib/pq"
 	"github.com/mailgun/mailgun-go/v4"
@@ -20,6 +21,9 @@ type Options struct {
 	DBConnString    string
 	RecaptchaSecret string
 	MailgunKey      string
+	AuthSecret      string
+	GoodreadsKey    string
+	GoodreadsSecret string
 	DevMode         bool
 }
 
@@ -27,6 +31,8 @@ type API struct {
 	db              *sql.DB
 	recaptchaSecret string
 	mg              mailgun.Mailgun
+	authSecret      string
+	goodreads       *oauth.Client
 	devMode         bool
 }
 
@@ -46,7 +52,17 @@ func Run(opts *Options) error {
 		db:              db,
 		recaptchaSecret: opts.RecaptchaSecret,
 		mg:              mailgun.NewMailgun("mg.readfaster.app", opts.MailgunKey),
-		devMode:         opts.DevMode,
+		authSecret:      opts.AuthSecret,
+		goodreads: &oauth.Client{
+			TemporaryCredentialRequestURI: "https://www.goodreads.com/oauth/request_token",
+			ResourceOwnerAuthorizationURI: "https://www.goodreads.com/oauth/authorize",
+			TokenRequestURI:               "https://www.goodreads.com/oauth/access_token",
+			Credentials: oauth.Credentials{
+				Token:  opts.GoodreadsKey,
+				Secret: opts.GoodreadsSecret,
+			},
+		},
+		devMode: opts.DevMode,
 	}
 
 	r := mux.NewRouter()
@@ -59,6 +75,10 @@ func Run(opts *Options) error {
 	r.Methods("GET").Path("/api/reading/sessions").HandlerFunc(api.WithAuth(api.HandleAPIGetReadingSessions))
 	r.Methods("POST").Path("/api/reading/sessions").HandlerFunc(api.WithAuth(api.HandleAPIPostReadingSessions))
 	r.Methods("DELETE").Path("/api/reading/sessions/{reading_session_timestamp}").HandlerFunc(api.WithAuth(api.HandleAPIDeleteReadingSessions))
+	r.Methods("GET").Path("/api/goodreads/currently_reading").HandlerFunc(api.WithAuth(api.WithGoodreadsCredentials(api.WithGoodreadsUserID(api.HandleAPIGetGoodreadsReviews))))
+
+	r.Methods("GET").Path("/goodreads/auth").HandlerFunc(api.WithAuth(api.HandleGoodreadsAuth))
+	r.Methods("GET").Path("/goodreads/callback").HandlerFunc(api.WithAuth(api.HandleGoodreadsCallback))
 
 	// Static
 	r.HandleFunc("/launch-subscribe", api.HandleLaunchSubscribe)
@@ -169,9 +189,26 @@ func (api *API) HandleAPIGetUser(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+
+	hasGoodreads := false
+	tmp := ""
+	err = api.db.QueryRow("SELECT user_id FROM goodreads_tokens WHERE user_id = $1", userID).Scan(&tmp)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			hasGoodreads = false
+		} else {
+			log.Println(err)
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+	} else {
+		hasGoodreads = true
+	}
+
 	w.Header().Add("content-type", "application/json")
-	json.NewEncoder(w).Encode(map[string]string{
-		"user_id": userID,
-		"email":   email,
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"user_id":       userID,
+		"email":         email,
+		"has_goodreads": hasGoodreads,
 	})
 }

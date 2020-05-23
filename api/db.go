@@ -15,11 +15,17 @@ func setupDatabase(db *sql.DB) error {
 		/* 004 */ `CREATE TABLE sessions (id TEXT PRIMARY KEY, user_id TEXT NOT NULL, expires_at TIMESTAMP NOT NULL)`,
 		/* 005 */ `ALTER TABLE sessions RENAME TO auth_sessions`,
 		/* 006 */ `CREATE TABLE reading_sessions (
+				       user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+				       timestamp BIGINT NOT NULL,
+				       duration  INT NOT NULL,
+				       PRIMARY KEY (user_id, timestamp)
+				   )`,
+		/* 007 */ `CREATE TABLE goodreads_tokens (
 					   user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-					   timestamp BIGINT NOT NULL,
-					   duration  INT NOT NULL,
-					   PRIMARY KEY (user_id, timestamp)
-					)`,
+					   token TEXT,
+					   secret TEXT,
+					   PRIMARY KEY (user_id)
+				   )`,
 	}
 
 	tx, err := db.Begin()

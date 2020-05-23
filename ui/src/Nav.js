@@ -17,7 +17,7 @@ class Hamburger extends Component {
 }
 
 class Nav extends Component {
-	render({ userID }) {
+	render({ userID, hasGoodreads }) {
 		if (!userID) {
 			return html`
 			<ul class="rfa-nav">
@@ -35,6 +35,7 @@ class Nav extends Component {
 			<ul class="rfa-nav">
 				<li><a href="/app/" class="rfa-nav-app-name">Read<em>Faster</em></a></li>
 				<li><a href="/app/">Home</a></li>
+				${ hasGoodreads ? html`<li><a href="/app/goodreads">Goodreads</a></li>` : ""}
 				<li><a href="/app/profile">Profile</a></li>
 				<li><a href="/app/help">Help</a></li>
 				<li><a href="/app/logout">Logout</a></li>
