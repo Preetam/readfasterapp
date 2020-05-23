@@ -4,12 +4,11 @@ import (
 	"bytes"
 	"context"
 	"html/template"
-	textTemplatePkg "html/template"
 	"log"
 	"time"
 )
 
-var textTemplate = textTemplatePkg.Must(textTemplatePkg.New("text").Parse(`Hello!
+var textTemplate = template.Must(template.New("text").Parse(`Hello!
 
 {{ .Content }}
 

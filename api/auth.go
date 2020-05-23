@@ -18,7 +18,7 @@ import (
 )
 
 var (
-	userIDContextKey = struct{}{}
+	userIDContextKey = "rfa_user_id"
 )
 
 func (api *API) HandleAPIRegister(w http.ResponseWriter, r *http.Request) {
@@ -101,13 +101,13 @@ func (api *API) HandleAPIRegister(w http.ResponseWriter, r *http.Request) {
 Thanks for registering. Click on the following link to verify your email address and magically log in.
 
 https://www.readfaster.app/app/auth?email=%s&ts=%s&verify=%x
-`, url.QueryEscape(email), ts, sha512.Sum512_256([]byte(api.recaptchaSecret+ts+email)))
+`, url.QueryEscape(email), ts, sha512.Sum512_256([]byte(api.authSecret+ts+email)))
 
 	htmlEmailContents := fmt.Sprintf(`<p>Welcome to ReadFaster!</p><p>Thanks for registering. Click on the following link to magically log in:
 
 	<a style="font-weight: bold;" href="https://www.readfaster.app/app/auth?email=%s&ts=%s&verify=%x">Log in</a></p>
 `,
-		url.QueryEscape(email), ts, sha512.Sum512_256([]byte(api.recaptchaSecret+ts+email)))
+		url.QueryEscape(email), ts, sha512.Sum512_256([]byte(api.authSecret+ts+email)))
 
 	err = api.sendMail(email, "Welcome to ReadFaster!", emailContents, htmlEmailContents)
 	if err != nil {
@@ -243,12 +243,12 @@ func (api *API) HandleAPILogin(w http.ResponseWriter, r *http.Request) {
 
 https://www.readfaster.app/app/auth?email=%s&ts=%s&verify=%x
 
-Cheers!`, url.QueryEscape(email), ts, sha512.Sum512_256([]byte(api.recaptchaSecret+ts+email)))
+Cheers!`, url.QueryEscape(email), ts, sha512.Sum512_256([]byte(api.authSecret+ts+email)))
 
 	htmlEmailContents := fmt.Sprintf(`<p>Click on the following link to magically log in:
 
 	<a style="font-weight: bold;" href="https://www.readfaster.app/app/auth?email=%s&ts=%s&verify=%x">Log in</a></p>`,
-		url.QueryEscape(email), ts, sha512.Sum512_256([]byte(api.recaptchaSecret+ts+email)))
+		url.QueryEscape(email), ts, sha512.Sum512_256([]byte(api.authSecret+ts+email)))
 
 	err = api.sendMail(email, "ReadFaster Login Link", emailContents, htmlEmailContents)
 	if err != nil {
@@ -273,7 +273,7 @@ func (api *API) HandleAuth(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	requestHash := sha512.Sum512_256([]byte(api.recaptchaSecret + ts + email))
+	requestHash := sha512.Sum512_256([]byte(api.authSecret + ts + email))
 	if subtle.ConstantTimeCompare(requestHash[:], verifyBytes) != 1 {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte(`Bad verify parameter.`))

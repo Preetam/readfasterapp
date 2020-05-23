@@ -5,6 +5,7 @@ import './App.css'
 import Nav from './Nav.js'
 import CheckLogin from './CheckLogin';
 import ReadingSessions from './ReadingSessions';
+import Goodreads from './Goodreads';
 import Profile from './Profile';
 import Help from './Help';
 
@@ -238,7 +239,7 @@ class App extends Component {
 			}
 		}).bind(this))
 		.then(((data) => {
-			this.setState({ loading: false, userID: data["user_id"], userEmail: data["email"] });
+			this.setState({ loading: false, userID: data["user_id"], userEmail: data["email"], hasGoodreads: data["has_goodreads"] });
 		}).bind(this))
 		.catch(((e) => {
 			this.setState({ loading: false, error: "Something went wrong." })
@@ -259,10 +260,11 @@ class App extends Component {
 			`
 		}
 		return html`
-		<${Nav} userID=${this.state.userID} />
+		<${Nav} userID=${this.state.userID} hasGoodreads=${this.state.hasGoodreads} />
 		<div class="rfa-container">
 		<${Router}>
 			<${Home} path="/app/" userID=${this.state.userID} />
+			<${Goodreads} path="/app/goodreads" />
 			<${Register} path="/app/register" />
 			<${Login} path="/app/login" />
 			<${Profile} path="/app/profile" userEmail=${this.state.userEmail} />
