@@ -77,7 +77,7 @@ class Profile extends Component {
 			<h1>Profile</h1>
 			<${UpdatePassword} userEmail=${userEmail} />
 			<h2>Goodreads</h2>
-			<p>Have a Goodreads account? <a href="/goodreads/auth">Connect it to ReadFaster.</a></p>
+			<p>Have a Goodreads account? <a href='#' onclick=${function() {window.open("/goodreads/auth", "Connect to Goodreads", "width=500,height=500")}}>Connect it to ReadFaster.</a></p>
 		`
 	}
 }
