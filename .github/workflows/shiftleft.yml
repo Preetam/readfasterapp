@@ -28,7 +28,7 @@ jobs:
     - name: NextGen Static Analysis
       run: |
         ${GITHUB_WORKSPACE}/sl --version
-        ${GITHUB_WORKSPACE}/sl analyze --app readfasterapp --tag branch=${{ github.head_ref || steps.extract_branch.outputs.branch }} --go --cpg $(pwd)
+        ${GITHUB_WORKSPACE}/sl analyze --app readfasterapp --tag branch=${{ github.head_ref || steps.extract_branch.outputs.branch }} --js --cpg $(pwd)
       env:
         SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.SHIFTLEFT_ACCESS_TOKEN }}
         
