@@ -39,3 +39,4 @@ jobs:
         curl -XPOST $GH_CHECK_URL -H "Authorization: Token ${GITHUB_TOKEN}" -H "accept: application/vnd.github.antiope-preview+json" -H "Content-Type: application/json" -d "{\"name\": \"ShiftLeft NextGen Static Analysis\", \"head_sha\": \"${GITHUB_REF}\", \"external_id\": \"readfasterapp\", \"details_url\": \"${URL}\", \"status\": \"completed\", \"conclusion\": \"action_required\", \"output\": {\"title\": \"ShiftLeft NextGen Static Analysis Findings\", \"summary\": \"Visit ${URL} for the findings\"}}"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
