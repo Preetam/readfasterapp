@@ -5,6 +5,7 @@ import './App.css'
 import Nav from './Nav.js'
 import CheckLogin from './CheckLogin';
 import ReadingSessions from './ReadingSessions';
+import Record from './Record';
 import Goodreads from './Goodreads';
 import Profile from './Profile';
 import Help from './Help';
@@ -19,6 +20,21 @@ class Home extends Component {
 		return html`
 			<div>
 				<${ReadingSessions} />
+			</div>
+		`
+	}
+}
+
+class RecordPage extends Component {
+	render({ userID }) {
+		if (!userID) {
+			return html`
+				<${CheckLogin} userID=${userID}/>
+				`
+		}
+		return html`
+			<div>
+				<${Record} />
 			</div>
 		`
 	}
@@ -264,6 +280,7 @@ class App extends Component {
 		<div class="rfa-container">
 		<${Router}>
 			<${Home} path="/app/" userID=${this.state.userID} />
+			<${RecordPage} path="/app/record" userID=${this.state.userID} />
 			<${Goodreads} path="/app/goodreads" />
 			<${Register} path="/app/register" />
 			<${Login} path="/app/login" />

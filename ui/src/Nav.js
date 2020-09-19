@@ -16,10 +16,24 @@ class Hamburger extends Component {
 	}
 }
 
+class BottomNav extends Component {
+	render() {
+		return html`
+		<div class='rfa-bottom-nav'>
+			<a href="/app/"><ion-icon name="home"></ion-icon></a>
+			<a href="/app/record"><ion-icon name="pencil"></ion-icon></a>
+			<!-- <a href="/app/trends"><ion-icon name="bar-chart"></ion-icon></a> -->
+			<a href="/app/profile"><ion-icon name="person"></ion-icon></a>
+		</div>
+		`
+	}
+}
+
 class Nav extends Component {
 	render({ userID, hasGoodreads }) {
 		if (!userID) {
 			return html`
+			<${BottomNav}/>
 			<ul class="rfa-nav">
 				<li><a href="/app/" class="rfa-nav-app-name">Read<em>Faster</em></a></li>
 				<li><a href="/app/">Home</a></li>
@@ -33,6 +47,7 @@ class Nav extends Component {
 		}
 		return html`
 			<ul class="rfa-nav">
+				<${BottomNav}/>
 				<li><a href="/app/" class="rfa-nav-app-name">Read<em>Faster</em></a></li>
 				<li><a href="/app/">Home</a></li>
 				${ hasGoodreads ? html`<li><a href="/app/goodreads">Goodreads</a></li>` : ""}
