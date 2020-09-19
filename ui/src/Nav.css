@@ -74,6 +74,7 @@
 	left: 0;
 	bottom: 0;
 	display: flex;
+	padding-bottom: 1em;
 }
 
 .rfa-bottom-nav a {
