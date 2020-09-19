@@ -24,6 +24,7 @@ class BottomNav extends Component {
 			<a href="/app/record"><ion-icon name="pencil"></ion-icon></a>
 			<!-- <a href="/app/trends"><ion-icon name="bar-chart"></ion-icon></a> -->
 			<a href="/app/profile"><ion-icon name="person"></ion-icon></a>
+			<a href="/app/help"><ion-icon name="help"></ion-icon></a>
 		</div>
 		`
 	}
@@ -50,10 +51,10 @@ class Nav extends Component {
 				<${BottomNav}/>
 				<li><a href="/app/" class="rfa-nav-app-name">Read<em>Faster</em></a></li>
 				<li><a href="/app/">Home</a></li>
+				<li><a href="/app/record">Record</a></li>
 				${ hasGoodreads ? html`<li><a href="/app/goodreads">Goodreads</a></li>` : ""}
 				<li><a href="/app/profile">Profile</a></li>
 				<li><a href="/app/help">Help</a></li>
-				<li><a href="/app/logout">Logout</a></li>
 			</ul>
 			<${Hamburger}/>
 			<div class="rfa-nav-separator" />

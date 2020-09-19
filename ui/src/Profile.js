@@ -78,6 +78,8 @@ class Profile extends Component {
 			<${UpdatePassword} userEmail=${userEmail} />
 			<h2>Goodreads</h2>
 			<p>Have a Goodreads account? <a href="/goodreads/auth">Connect it to ReadFaster.</a></p>
+			<h2>Log out</h2>
+			<p>Click <a href="/app/logout">here</a> to log out.</p>
 		`
 	}
 }
