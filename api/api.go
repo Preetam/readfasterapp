@@ -76,6 +76,7 @@ func Run(opts *Options) error {
 	r.Methods("POST").Path("/api/reading/sessions").HandlerFunc(api.WithAuth(api.HandleAPIPostReadingSessions))
 	r.Methods("DELETE").Path("/api/reading/sessions/{reading_session_timestamp}").HandlerFunc(api.WithAuth(api.HandleAPIDeleteReadingSessions))
 	r.Methods("GET").Path("/api/goodreads/currently_reading").HandlerFunc(api.WithAuth(api.WithGoodreadsCredentials(api.WithGoodreadsUserID(api.HandleAPIGetGoodreadsReviews))))
+	r.Methods("POST").Path("/api/goodreads/books/{goodreads_book_id}/progress").HandlerFunc(api.WithAuth(api.WithGoodreadsCredentials(api.WithGoodreadsUserID(api.HandleAPIPostGoodreadsProgress))))
 
 	r.Methods("GET").Path("/goodreads/auth").HandlerFunc(api.WithAuth(api.HandleGoodreadsAuth))
 	r.Methods("GET").Path("/goodreads/callback").HandlerFunc(api.WithAuth(api.HandleGoodreadsCallback))

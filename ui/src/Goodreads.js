@@ -1,11 +1,75 @@
 import { Component } from 'preact';
 import { html } from 'htm/preact';
 import './Goodreads.css';
+import Modal from './Modal';
+
+class GoodreadsProgressForm extends Component {
+	constructor() {
+		super()
+		this.state = {
+			percent: 0,
+			updated: false,
+		}
+	}
+
+	onPercentInput(e) {
+		this.setState({ percent: parseInt(e.target.value) })
+	}
+
+	onSubmit(bookID) {
+		return (function(e) {
+			e.preventDefault();
+			fetch(`/api/goodreads/books/${bookID}/progress?percent=${this.state.percent}`, {
+				method: "POST",
+				headers: {
+					'Content-Type': 'application/json',
+				},
+			}).then(((response) => {
+				if (!response.ok) {
+					this.setState({ error: response.status + ": " + response.statusText })
+				}
+			}).bind(this))
+			this.setState({ updated: true })
+			e.target.reset()
+		}.bind(this))
+	}
+
+	render() {
+		const { book } = this.props
+
+		if (this.state.error) {
+			return html`
+				<p>Something went wrong: ${this.state.error}</p>
+			`
+		}
+
+		if (this.state.updated) {
+			return html`
+				<p>Updated!</p>
+			`
+		}
+
+		return html`
+		<div>
+			Updating ${book.title}
+		</div>
+		<form onSubmit=${this.onSubmit(book.id)}>
+			<input class="rfa-input" type="number" placeholder="Percent" onInput=${this.onPercentInput.bind(this)}>Progress</input>
+			<button class="rfa-button" type="submit">Submit</button>
+		</form>
+		`
+	}
+}
 
 class Goodreads extends Component {
 	constructor() {
 		super()
-		this.state = { loading: true, error: null, books: [] }
+		this.state = {
+			loading: true,
+			error: null,
+			books: [],
+			modalBook: null,
+		}
 	}
 
 	refreshList() {
@@ -13,19 +77,24 @@ class Goodreads extends Component {
 			if (response.ok) {
 				return response.json()
 			} else {
-				this.setState({ error: response.status + ": " + response.statusText })
+				throw response
 			}
 		}).bind(this))
 		.then(((data) => {
 			this.setState({ loading: false, books: data.books });
 		}).bind(this))
 		.catch(((e) => {
-			this.setState({ error: "Something went wrong." })
+			this.setState({ loading: false, error: e.status + ": " + e.statusText })
 		}).bind(this))
 	}
 
 	componentWillMount() {
 		this.refreshList()
+	}
+
+	setModalBook(modalBook) {
+		this.setState({ modalBook })
+		console.log(this.state)
 	}
 
 	render() {
@@ -40,9 +109,15 @@ class Goodreads extends Component {
 			`
 		}
 
+		let setModalBook = this.setModalBook.bind(this)
 		return html`
 			<div>
 				<h2>Currently reading on Goodreads</h2>
+				<${Modal} visible=${this.state.modalBook ? true : false} onclose=${() => (setModalBook(null))}>
+					<h4>Set progress</h4>
+					<${GoodreadsProgressForm} book=${this.state.modalBook}/>
+				</${Modal}>
+
 				${this.state.books.length > 0 ?
 					this.state.books.map(b => html`
 					<div class="rfa-goodreads-currently-reading">
@@ -50,8 +125,10 @@ class Goodreads extends Component {
 						<div>
 							<div class="rfa-goodreads-currently-reading-title">${b.title}</div>
 							<div class="rfa-goodreads-currently-reading-authors">${b.authors.join(", ")}</div>
+							<a href='#' onclick=${() => (setModalBook(b))}>Set progress</a>
 						</div>
-					</div>`):
+					</div>
+					`):
 					html`<p>No books currently being read.</p>`}
 			</div>
 		`

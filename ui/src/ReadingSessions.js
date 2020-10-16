@@ -2,6 +2,7 @@ import { Component } from 'preact';
 import { html } from 'htm/preact';
 import * as d3 from "d3";
 import './ReadingSessions.css';
+import Modal from './Modal'
 
 class ReadingSessionsChart extends Component {
 	render({ sessions }) {

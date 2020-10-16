@@ -1,0 +1,53 @@
+body.modal-visible {
+	overflow: hidden;
+}
+
+.rfa-modal-bg {
+	background-color: rgba(0, 0, 0, 0.5);
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+	z-index: 9999;
+}
+
+.rfa-modal {
+	height: 100%;
+	background-color: var(--main-bg-color);
+}
+
+.rfa-modal-content {
+	padding: 2rem;
+}
+
+.rfa-modal-close {
+	margin: 1rem;
+	position: relative;
+	top: 0;
+	font-size: 1.5rem;
+	cursor: pointer;
+	float: right;
+	text-align: right;
+}
+
+@media screen and (min-width: 30rem) {
+	.rfa-modal-bg {
+		background-color: rgba(0, 0, 0, 0.5);
+		position: absolute;
+		top: 0;
+		left: 0;
+		height: 100%;
+		width: 100%;
+	}
+
+	.rfa-modal {
+		height: auto;
+		min-height: 10rem;
+		position: relative;
+		width: 45rem;
+		max-width: 90%;
+		margin: 5rem auto;
+		box-shadow: rgba(0, 0, 0, 0.4) 0 0 1rem;
+	}
+}

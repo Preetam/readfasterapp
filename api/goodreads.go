@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/gomodule/oauth1/oauth"
+	"github.com/gorilla/mux"
 )
 
 var (
@@ -236,4 +237,32 @@ func (api *API) HandleAPIGetGoodreadsReviews(w http.ResponseWriter, r *http.Requ
 	json.NewEncoder(w).Encode(map[string]interface{}{
 		"books": books,
 	})
+}
+
+func (api *API) HandleAPIPostGoodreadsProgress(w http.ResponseWriter, r *http.Request) {
+	credsVal := r.Context().Value(goodreadsCredentialsContextKey)
+	if credsVal == nil {
+		http.Error(w, "missing Goodreads token", http.StatusUnauthorized)
+		return
+	}
+	creds := credsVal.(*oauth.Credentials)
+
+	goodreadsUserIDVal := r.Context().Value(goodreadsUserIDContextKey)
+	if goodreadsUserIDVal == nil {
+		http.Error(w, "missing Goodreads user ID", http.StatusUnauthorized)
+		return
+	}
+
+	goodreadsBook := mux.Vars(r)["goodreads_book_id"]
+
+	_, err := api.goodreads.Post(nil, creds,
+		"https://www.goodreads.com/user_status.xml", url.Values{
+			"user_status[book_id]": []string{goodreadsBook},
+			"user_status[percent]": []string{r.URL.Query().Get("percent")},
+		})
+	if err != nil {
+		log.Println(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }
