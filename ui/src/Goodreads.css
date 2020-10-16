@@ -1,11 +1,10 @@
 .rfa-goodreads-currently-reading img {
 	margin-right: 1rem;
-	height: 60px;
+	height: 80px;
 }
 
 .rfa-goodreads-currently-reading {
 	display: flex;
-	align-items:center;
 	margin: 2rem 0;
 	line-height: 1.25;
 }
@@ -16,4 +15,9 @@
 
 .rfa-goodreads-currently-reading-authors {
 	font-size: 0.9rem;
+}
+
+.rfa-goodreads-currently-reading-progress {
+	font-size: 0.8rem;
+	padding: 1rem 0;
 }

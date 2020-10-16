@@ -167,18 +167,34 @@ func (api *API) HandleGoodreadsCallback(w http.ResponseWriter, r *http.Request) 
 
 type goodreadsReviewListResponse struct {
 	XMLName xml.Name `xml:"GoodreadsResponse"`
-	Books   struct {
-		Book []struct {
-			ID       int    `xml:"id"`
-			Title    string `xml:"title"`
-			ImageURL string `xml:"image_url"`
-			Authors  struct {
-				Author []struct {
-					Name string `xml:"name"`
-				} `xml:"author"`
-			} `xml:"authors"`
-		} `xml:"book"`
-	} `xml:"books"`
+	Reviews struct {
+		Review []struct {
+			ID   int `xml:"id"`
+			Book struct {
+				ID       int    `xml:"id"`
+				Title    string `xml:"title"`
+				ImageURL string `xml:"image_url"`
+				NumPages int    `xml:"num_pages"`
+				Authors  struct {
+					Author []struct {
+						Name string `xml:"name"`
+					} `xml:"author"`
+				} `xml:"authors"`
+			} `xml:"book"`
+		} `xml:"review"`
+	} `xml:"reviews"`
+}
+
+type goodreadsReviewResponse struct {
+	XMLName xml.Name `xml:"GoodreadsResponse"`
+	Review  struct {
+		UserStatuses struct {
+			UserStatus []struct {
+				Page    int `xml:"page"`
+				Percent int `xml:"percent"`
+			} `xml:"user_status"`
+		} `xml:"user_statuses"`
+	} `xml:"review"`
 }
 
 type GoodreadsBook struct {
@@ -186,6 +202,11 @@ type GoodreadsBook struct {
 	Title    string   `json:"title"`
 	ImageURL string   `json:"image_url"`
 	Authors  []string `json:"authors"`
+	NumPages int      `json:"num_pages"`
+	Progress struct {
+		Page    int `json:"page"`
+		Percent int `json:"percent"`
+	} `json:"progress"`
 }
 
 func (api *API) HandleAPIGetGoodreadsReviews(w http.ResponseWriter, r *http.Request) {
@@ -205,6 +226,7 @@ func (api *API) HandleAPIGetGoodreadsReviews(w http.ResponseWriter, r *http.Requ
 
 	resp, err := api.goodreads.Get(nil, creds,
 		fmt.Sprintf("https://www.goodreads.com/review/list/%s.xml", goodreadsUserID), url.Values{
+			"v":     []string{"2"},
 			"shelf": []string{"currently-reading"},
 		})
 	if err != nil {
@@ -220,20 +242,46 @@ func (api *API) HandleAPIGetGoodreadsReviews(w http.ResponseWriter, r *http.Requ
 	}
 
 	books := []GoodreadsBook{}
-	for _, book := range goodreadsResponse.Books.Book {
+	for _, review := range goodreadsResponse.Reviews.Review {
+		book := review.Book
 		authors := []string{}
 		for _, author := range book.Authors.Author {
 			authors = append(authors, author.Name)
 		}
-		books = append(books, GoodreadsBook{
+
+		reviewResponse := goodreadsReviewResponse{}
+		resp, err = api.goodreads.Get(nil, creds,
+			fmt.Sprintf("https://www.goodreads.com/review/show.xml"), url.Values{
+				"id": []string{fmt.Sprint(review.ID)},
+			})
+		if err != nil {
+			http.Error(w, "Internal server error: "+err.Error(), 500)
+			return
+		}
+		err = xml.NewDecoder(resp.Body).Decode(&reviewResponse)
+		if err != nil {
+			http.Error(w, "Internal server error: "+err.Error(), 500)
+			return
+		}
+
+		bookResponse := GoodreadsBook{
 			ID:       book.ID,
 			Title:    book.Title,
 			ImageURL: book.ImageURL,
+			NumPages: book.NumPages,
 			Authors:  authors,
-		})
+		}
+		if len(reviewResponse.Review.UserStatuses.UserStatus) > 0 {
+			status := reviewResponse.Review.UserStatuses.UserStatus[0]
+			bookResponse.Progress.Page = status.Page
+			bookResponse.Progress.Percent = status.Percent
+		}
+
+		books = append(books, bookResponse)
 	}
 
 	w.Header().Add("content-type", "application/json")
+	w.Header().Add("cache-control", "max-age=60")
 	json.NewEncoder(w).Encode(map[string]interface{}{
 		"books": books,
 	})

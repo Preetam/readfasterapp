@@ -125,7 +125,14 @@ class Goodreads extends Component {
 						<div>
 							<div class="rfa-goodreads-currently-reading-title">${b.title}</div>
 							<div class="rfa-goodreads-currently-reading-authors">${b.authors.join(", ")}</div>
-							<a href='#' onclick=${() => (setModalBook(b))}>Set progress</a>
+							<div class="rfa-goodreads-currently-reading-progress">
+								${b.progress.page > 0 || b.progress.percent > 0 ? html`
+								Progress: <strong>
+									${b.progress.page > 0 ? html`Page ${b.progress.page} of ${b.num_pages}` :
+									html`${b.progress.percent}%`}
+								</strong> - ` : ''}
+								<a href='#' onclick=${() => (setModalBook(b))}>Update progress</a>
+							</div>
 						</div>
 					</div>
 					`):
