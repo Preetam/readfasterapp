@@ -10,7 +10,7 @@
   "repository": "github.com/Preetam/readfasterapp",
   "license": "UNLICENSED",
   "dependencies": {
-    "d3": "^5.16.0",
+    "d3": "^7.7.0",
     "history": "^4.10.1",
     "htm": "^3.0.4",
     "preact": "^10.4.8",
